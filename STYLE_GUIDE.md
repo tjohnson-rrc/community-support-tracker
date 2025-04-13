@@ -15,6 +15,19 @@
 
 # Fonts
 
+- Segoe UI
+
+- Tahoma
+  
+- Geneva
+
+- Verdana
+
+- sans-serif
 
 # Elements
 
+- font-awesome site for icons
+
+- PiXELL River Financial Logo
+  
