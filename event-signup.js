@@ -3,12 +3,55 @@ const eventSignupForm = document.getElementById("eventSignup");
 eventSignupForm.addEventListener("submit", (eventObj) => {
     eventObj.preventDefault();
 
-    if(validateEventForm) {
+    const inputsAreValid = validateEventForm();
+
+    if(inputsAreValid) {
         eventSignupForm.submit();
+    } else {
+        console.warn("Invalid Inputs.");
     }
 })
 
 // Main Validation
+function validateEventForm() {
+    const errorMessages = document.querySelectorAll(".input-error");
+
+    errorMessages.forEach(n => n.remove());
+
+    let inputsAreValid = true;
+
+    // Beginning of validation for form submit
+
+    // Event name validation
+    const eventNameInput = document.getElementById("field_event-name");
+    const eventNameInputValue = escapeHTML(eventNameInput.value);
+
+    const eventNameValidation = validateEventName(eventNameInputValue, eventNameInput);
+    if(!eventNameValidation["isValid"]) {
+        inputsAreValid = false;
+    }
+    if(eventNameValidation["errorMessages"].length > 0) {
+        eventNameValidation["errorMessages"].forEach(m => {
+            displayInputError(eventNameInput, m);
+        })
+    }
+
+    // Representative validation
+    const repNameInput = document.getElementById("field_rep-name");
+    const repNameInputValue = escapeHTML(repNameInput.value);
+
+    const repNameValidation = validateRepName(repNameInputValue, repNameInput);
+    if(!repNameValidation["isValid"]) {
+        inputsAreValid = false;
+    }
+    if(repNameValidation["errorMessages"].length > 0) {
+        repNameValidation["errorMessages"].forEach(m => {
+            displayInputError(repNameInput, m);
+        })
+    }
+
+    return inputsAreValid;
+}
 
 // Show error message
 function displayInputError(inputElement, message) {
@@ -33,17 +76,33 @@ function escapeHTML(input) {
         .replace(/'/g, "&#039;");
 }
 
-// Validation for required text input
-function validateName(input) {
-    let validName = true;
+// Event input validation
+function validateEventName(input) {
+    let validEventName = true;
     const errorMessage = [];
 
     if (input == "") {
-        validName = false;
+        validEventName = false;
+        errorMessage.push("Please enter the community event name.");
+    }
+    return {
+        isValid: validEventName,
+        errorMessages: errorMessage
+    };
+}
+
+// Name input validation
+function validateRepName(input) {
+    let validRepName = true;
+    const errorMessage = [];
+
+    if (input == "") {
+        validRepName = false;
         errorMessage.push("Please enter the name of the Representative.");
     }
     return {
-    isValid: validName,
+    isValid: validRepName,
     errorMessages: errorMessage
     };
 }
+
