@@ -50,6 +50,20 @@ function validateEventForm() {
         })
     }
 
+    // Email Validation
+    const emailInput = document.getElementById("field_email");
+    const emailInputValue = escapeHTML(emailInput.value);
+
+    const emailValidation = validateEmail(emailInputValue, emailInput);
+    if(!emailValidation["isValid"]) {
+        inputsAreValid = false;
+    }
+    if(emailValidation["errorMessages"].length > 0) {
+        emailValidation["errorMessages"].forEach(m => {
+            displayInputError(emailInput, m)
+        });
+    } 
+
     return inputsAreValid;
 }
 
@@ -105,4 +119,23 @@ function validateRepName(input) {
     errorMessages: errorMessage
     };
 }
+
+// Email Input Validation
+function validateEmail(input) {
+    let validEmail = true;
+    const errorMessage = [];
+
+    const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+    const emailFollowsPattern = emailPattern.test(input);
+    if(!emailFollowsPattern) {
+        validEmail = false;
+        errorMessage.push("Please enter a valid email.");
+    }
+
+    return {isValid: validEmail, 
+        errorMessages: errorMessage
+    };
+}
+
 
