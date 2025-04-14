@@ -1,5 +1,5 @@
 // import functions from another file for use in this one
-const {addNumbers} = require("./script");
+const {addNumbers} = require("./template-script");
 
 // "function-context-expected outcome"
 test("addNumbers with correct arguments returns a sum", () => {
