@@ -62,7 +62,21 @@ function validateEventForm() {
         emailValidation["errorMessages"].forEach(m => {
             displayInputError(emailInput, m)
         });
-    } 
+    }
+
+    // Dropdown Menu Validation
+    const dropdownSelection = document.getElementById("field_role-selection");
+    const dropdownSelectionValue = escapeHTML(dropdownSelection.value);
+
+    const dropdownSelectionValidation = validateDropdownSelection(dropdownSelectionValue, dropdownSelection);
+    if(!dropdownSelectionValidation["isValid"]) {
+        inputsAreValid = false;
+    }
+    if(dropdownSelectionValidation["errorMessages"].length > 0) {
+        dropdownSelectionValidation["errorMessages"].forEach(m => {
+            displayInputError(dropdownSelection, m)
+        });
+    }
 
     return inputsAreValid;
 }
@@ -138,4 +152,17 @@ function validateEmail(input) {
     };
 }
 
+// Dropdown Menu Input Validation
+function validateDropdownSelection(input) {
+    let validSelection = true;
+    const errorMessage = [];
 
+    if (input == "") {
+        validSelection = false;
+        errorMessage.push("Please choose an event role.")
+    }
+    return {
+        isValid: validSelection,
+        errorMessages: errorMessage
+    };
+}
