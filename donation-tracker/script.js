@@ -50,11 +50,10 @@ function validateDonationForm() {
 
     let inputsAreValid = true
 
-    // PLACEHOLDERS VVVVV
     // VALIDATE CHARITY NAME 
     const charityNameValue = escapeHTML(charityNameInputNode.value);
-
     const charityNameValidation = validateCharityName(charityNameValue, charityNameInputNode);
+
     if (!charityNameValidation["isValid"]) {
         inputsAreValid = false;
     }
@@ -67,8 +66,18 @@ function validateDonationForm() {
 
 
     // VALIDATE DONATION AMOUNT
+    const donationAmountValue = escapeHTML(donationAmountInputNode.value);
+    const donationAmountValidation = validateDonationAmount(donationAmountValue, donationAmountInputNode);
 
+    if (!donationAmountValidation["isValid"]) {
+        inputsAreValid = false;
+    }
 
+    if (donationAmountValidation["errorMessages"].length > 0) {
+        donationAmountValidation["errorMessages"].forEach(m => {
+            displayInputError(donationAmountInputNode, m)
+        });
+    }
 
     // VALIDATE DATE OF DONATION
 
