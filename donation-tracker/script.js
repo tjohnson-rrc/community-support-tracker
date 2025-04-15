@@ -17,14 +17,32 @@ donationTrackerFormNode.addEventListener("submit", (eventObj) => {
     const inputsAreValid = validateDonationForm();
 
     if (inputsAreValid) {
+        
         // **** PLACEHOLDER FOR FUNCTION THAT STORES TEMPORARY DATA ************8
+        collectTemporaryDonationData();
 
-        console.log("Donation submitted: ");    //PLACEHOLDER (display the temporary data along with the string) 
+        console.log(`Donation submitted: ${temporaryDonationData}`);    //PLACEHOLDER (display the temporary data along with the string) 
         donationTrackerFormNode.submit();
     } else {
         console.warn("Invalid inputs.");
     }
 })
+
+function collectTemporaryDonationData() {
+    charityNameValue = escapeHTML(charityNameInputNode.value);
+    donationAmountValue = escapeHTML(donationAmountInputNode.value);
+    donationDateValue = donationDateInputNode.value;
+    donationCommentValue = escapeHTML(donationCommentInputNode.value);
+
+    temporaryDonationData = {
+        charityName: charityNameValue,
+        donationAmount: donationAmountValue,
+        donationDate: donationDateValue,
+        donorComment: donationCommentValue
+    };
+
+    return temporaryDonationData;
+}
 
 function validateDonationForm() {
     // removes existing error messages
@@ -132,7 +150,6 @@ function validateDonationComment(input) {
 }
 
 // HELPER FUNCTIONS
-
 function displayInputError(inputElement, message) {
     let inputParentNode = inputElement.closest(".input-container");
     const errorDisplayNode = document.createElement("span");
