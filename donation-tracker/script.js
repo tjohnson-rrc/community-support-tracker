@@ -7,8 +7,6 @@ const donationCommentInputNode = document.querySelector("#field_donor-comment");
 
 let temporaryDonationData = {}
 
-
-
 // IMPLEMENTATION
 donationTrackerFormNode.addEventListener("submit", (eventObj) => {
     eventObj.preventDefault();
@@ -17,11 +15,17 @@ donationTrackerFormNode.addEventListener("submit", (eventObj) => {
 
     if (inputsAreValid) {
 
-        // **** PLACEHOLDER FOR FUNCTION THAT STORES TEMPORARY DATA ************8
+        // FUNCTION THAT STORES TEMPORARY DATA 
         collectTemporaryDonationData();
+        // Displays the temporary donation data when user submits  
+        console.log("Donation submitted: ", temporaryDonationData);
 
-        console.log(`Donation submitted: ${temporaryDonationData}`);    //PLACEHOLDER (display the temporary data along with the string) 
-        donationTrackerFormNode.submit();
+        // Set a timeout just to see the console.log before page refreshes
+        // for testing purposes 
+        setTimeout(() => {
+            donationTrackerFormNode.submit();
+        }, 15000);
+
     } else {
         console.warn("Invalid inputs.");
     }
@@ -33,6 +37,7 @@ function collectTemporaryDonationData() {
     donationDateValue = donationDateInputNode.value;
     donationCommentValue = escapeHTML(donationCommentInputNode.value);
 
+    // This is grabbing the global variable and assigning new values.
     temporaryDonationData = {
         charityName: charityNameValue,
         donationAmount: donationAmountValue,
@@ -44,7 +49,7 @@ function collectTemporaryDonationData() {
 }
 
 function validateDonationForm() {
-    // removes existing error messages
+    // Removes existing error messages
     const errorMessagesNodes = document.querySelectorAll(".input-error");
     errorMessagesNodes.forEach(n => n.remove());
 
@@ -63,7 +68,6 @@ function validateDonationForm() {
             displayInputError(charityNameInputNode, m)
         });
     }
-
 
     // VALIDATE DONATION AMOUNT
     const donationAmountValue = escapeHTML(donationAmountInputNode.value);
@@ -108,8 +112,6 @@ function validateDonationForm() {
 
     return inputsAreValid;
 }
-
-
 
 // VALIDATIONS
 function validateCharityName(input) {
