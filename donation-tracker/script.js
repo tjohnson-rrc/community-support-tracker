@@ -9,7 +9,21 @@ let temporaryDonationData = {}
 
 
 // IMPLEMENTATION
+donationTrackerFormNode.addEventListener("submit", (eventObj) => {
+    eventObj.preventDefault();
+    donationTrackerFormNode.submit();
+    
+    const inputsAreValid = validateDonationForm();
 
+    if (inputsAreValid) {
+        // **** PLACEHOLDER FOR FUNCTION THAT STORES TEMPORARY DATA ************8
+
+        console.log("Donation submitted: ");    //PLACEHOLDER (display the temporary data along with the string) 
+        donationTrackerFormNode.submit();
+    } else {
+        console.warn("Invalid inputs.");
+    }
+})
 
 
 
