@@ -12,12 +12,11 @@ let temporaryDonationData = {}
 // IMPLEMENTATION
 donationTrackerFormNode.addEventListener("submit", (eventObj) => {
     eventObj.preventDefault();
-    donationTrackerFormNode.submit();
-    
+
     const inputsAreValid = validateDonationForm();
 
     if (inputsAreValid) {
-        
+
         // **** PLACEHOLDER FOR FUNCTION THAT STORES TEMPORARY DATA ************8
         collectTemporaryDonationData();
 
@@ -49,11 +48,22 @@ function validateDonationForm() {
     const errorMessagesNodes = document.querySelectorAll(".input-error");
     errorMessagesNodes.forEach(n => n.remove());
 
-    const inputsAreValid = true
+    let inputsAreValid = true
 
     // PLACEHOLDERS VVVVV
     // VALIDATE CHARITY NAME 
-    
+    const charityNameValue = escapeHTML(charityNameInputNode.value);
+
+    const charityNameValidation = validateCharityName(charityNameValue, charityNameInputNode);
+    if (!charityNameValidation["isValid"]) {
+        inputsAreValid = false;
+    }
+
+    if (charityNameValidation["errorMessages"].length > 0) {
+        charityNameValidation["errorMessages"].forEach(m => {
+            displayInputError(charityNameInputNode, m)
+        });
+    }
 
 
     // VALIDATE DONATION AMOUNT
