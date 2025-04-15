@@ -64,7 +64,7 @@ function validateCharityName(input) {
 
     if (!charityNameFollowsPattern) {
         validCharityName = false;
-        errorMessages.push("Please provide a charity name more than 4 alphabetical characters.");
+        errorMessages.push("Please provide a charity name more than 3 alphabetical characters.");
     }
 
     return {
@@ -72,7 +72,24 @@ function validateCharityName(input) {
         errorMessages: errorMessages};
 }
 
+function validateDonationAmount(input) {
+    let validDonationAmount = true;
+    const errorMessages = [];
 
+    // CITATION: https://stackoverflow.com/questions/16242449/regex-currency-validation
+    const donationAmountPattern = /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/;
+
+    const donationAmountFollowsPattern = donationAmountPattern.test(input);
+
+    if (!donationAmountFollowsPattern) {
+        validDonationAmount = false;
+        errorMessages.push("Please provide a valid donation amount!");
+    }
+
+    return {
+        isValid: validDonationAmount,
+        errorMessages: errorMessages};
+}
 
 
 
