@@ -64,7 +64,7 @@ function validateCharityName(input) {
 
     if (!charityNameFollowsPattern) {
         validCharityName = false;
-        errorMessages.push("Please provide a charity name more than 3 alphabetical characters.");
+        errorMessages.push("Please provide a charity name more than 3 alphabetical characters!");
     }
 
     return {
@@ -91,6 +91,29 @@ function validateDonationAmount(input) {
         errorMessages: errorMessages};
 }
 
+function validateDonationDate(input) {
+    let validDonationDate = true;
+    const errorMessages = [];
+    const selectedDate = input.value;
+
+    // Getting todays date in YYYY-MM-DD format
+    // Citation for Date : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+    const today = new Date();
+    const formattedToday = today.toISOString().split("T")[0];
+
+    if (!selectedDate) { // checks if user inputted anything at all
+        validDonationDate = false;
+        errorMessages.push("Please select a date of when the donation was made!");
+    } else if (selectedDate > formattedToday) { // checks if the date selected is a FUTURE date
+        validDonationDate = false;
+        errorMessages.push("Please select a date that isn't in the future!")
+    }
+
+    return {
+        isValid: validDonationDate,
+        errorMessages: errorMessages
+    }
+}
 
 
 // HELPER FUNCTIONS
