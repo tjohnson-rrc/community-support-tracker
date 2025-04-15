@@ -6,11 +6,20 @@ eventSignupForm.addEventListener("submit", (eventObj) => {
     const inputsAreValid = validateEventForm();
 
     if(inputsAreValid) {
-        eventSignupForm.submit();
-    } else {
+        const eventFormData = {
+            eventName: escapeHTML(document.getElementById("field_event-name").value),
+            repName: escapeHTML(document.getElementById("field_rep-name").value),
+            repEmail: escapeHTML(document.getElementById("field_email").value),
+            eventRole: escapeHTML(document.getElementById("field_role-selection").value)
+        };
+        console.log("Temporarily storing form data", eventFormData)
+        
+        // comment out eventSignupForm().submit when testing
+        // eventSignupForm.submit();
+        } else {
         console.warn("Invalid Inputs.");
     }
-})
+});
 
 // Main Validation
 function validateEventForm() {
