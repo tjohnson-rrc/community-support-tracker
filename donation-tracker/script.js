@@ -23,3 +23,18 @@ let temporaryDonationData = {}
 
 // HELPER FUNCTIONS
 
+function displayInputError(inputElement, message) {
+    let inputParentNode = inputElement.closest(".input-container");
+    const errorDisplayNode = document.createElement("span");
+
+    if (!inputParentNode) {
+        inputParentNode = inputElement.parentElement;
+    }
+    
+    errorDisplayNode.textContent = message;
+    errorDisplayNode.classList.add("input-error");
+
+    errorDisplayNode.setAttribute("role", "alert");
+
+    inputParentNode.appendChild(errorDisplayNode);
+}
