@@ -54,7 +54,23 @@ function validateDonationForm() {
 
 
 // VALIDATIONS
+function validateCharityName(input) {
+    let validCharityName = true;
+    const errorMessages = [];
 
+    const charityNamePattern = /^[A-Z]{4,}$/i;
+    
+    const charityNameFollowsPattern = charityNamePattern.test(input);
+
+    if (!charityNameFollowsPattern) {
+        validCharityName = false;
+        errorMessages.push("Please provide a charity name more than 4 alphabetical characters.");
+    }
+
+    return {
+        isValid: validCharityName,
+        errorMessages: errorMessages};
+}
 
 
 
