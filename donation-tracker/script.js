@@ -97,7 +97,7 @@ function validateDonationDate(input) {
     const selectedDate = input.value;
 
     // Getting todays date in YYYY-MM-DD format
-    // Citation for Date : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+    // CITATION for Date : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
     const today = new Date();
     const formattedToday = today.toISOString().split("T")[0];
 
@@ -111,10 +111,25 @@ function validateDonationDate(input) {
 
     return {
         isValid: validDonationDate,
-        errorMessages: errorMessages
-    }
+        errorMessages: errorMessages};
 }
 
+function validateDonationComment(input) {
+    let validDonationComment = true;
+    const errorMessages = [];
+
+    if (!input.trim()) {
+        validDonationComment = false;
+        errorMessages.push("Please provide a donation comment!");
+    } else if (input.length > 200) {
+        validDonationComment = false;
+        errorMessages.push("Comment must be less than 200 characters!");
+    }
+
+    return {
+        isValid: validDonationComment,
+        errorMessages: errorMessages};
+}
 
 // HELPER FUNCTIONS
 
