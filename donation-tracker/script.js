@@ -80,11 +80,21 @@ function validateDonationForm() {
     }
 
     // VALIDATE DATE OF DONATION
+    const donationDateValidation = validateDonationDate(donationDateInputNode);
 
+    if (!donationDateValidation["isValid"]) {
+        inputsAreValid = false;
+    }
 
+    if (donationDateValidation["errorMessages"].length > 0) {
+        donationDateValidation["errorMessages"].forEach(m => {
+            displayInputError(donationDateInputNode, m)
+        });
+    }
 
     // VALIDATE COMMENT/MESSAGE
 
+    
     return inputsAreValid;
 }
 
