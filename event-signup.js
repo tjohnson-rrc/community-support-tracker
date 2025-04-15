@@ -1,21 +1,31 @@
-const eventSignupForm = document.getElementById("eventSignup");
-
-eventSignupForm.addEventListener("submit", (eventObj) => {
-    eventObj.preventDefault();
-
-    const inputsAreValid = validateEventForm();
-
-    if(inputsAreValid) {
-        const eventFormData = getEventFormData();
-        
-        console.log("Temporarily storing form data", eventFormData)
-        
-        // comment out eventSignupForm().submit when testing
-        // eventSignupForm.submit();
-    } else {
-        console.warn("Invalid Inputs.");
+document.addEventListener("DOMContentLoaded", function() {
+    // Check if the form exists before proceeding
+    const eventSignupForm = document.getElementById("eventSignup");
+    if (!eventSignupForm) {
+        console.error("Form not found.");
+        return;
     }
-});
+
+    // function eventFormHandler() {
+    //     const eventSignupForm = document.getElementById("eventSignup");
+    //     if(!eventSignupForm) return;
+
+        eventSignupForm.addEventListener("submit", (eventObj) => {
+            eventObj.preventDefault();
+        
+            const inputsAreValid = validateEventForm();
+        
+            if(inputsAreValid) {
+                const eventFormData = getEventFormData();          
+                console.log("Temporarily storing form data", eventFormData);
+                
+                // comment out eventSignupForm().submit when testing
+                // eventSignupForm.submit();
+            } else {
+                console.warn("Invalid Inputs.");
+            }
+        });
+    });
 
 // Validates all required fields
 function validateAllFields(eventName, repName, repEmail, eventRole){
@@ -23,9 +33,8 @@ function validateAllFields(eventName, repName, repEmail, eventRole){
         eventName: validateEventName(eventName),
         repName: validateRepName(repName),
         repEmail: validateEmail(repEmail),
-        eventRole: validateDropdownSelection(eventRole)
+        eventRole: validateEventRole(eventRole)
     };
-
 
     return fieldValidations
 }
@@ -41,163 +50,118 @@ function validateEventForm() {
     const eventNameInput = document.getElementById("field_event-name");
     const repNameInput = document.getElementById("field_rep-name");
     const emailInput = document.getElementById("field_email");
-    const dropdownSelection = document.getElementById("field_role-selection");
+    const eventRoleInput = document.getElementById("field_role-selection");
+
     
-    const values = {
-        eventName: escapeHTML(eventNameInput.value),
-        repName: escapeHTML(repNameInput.value),
-        repEmail: escapeHTML(emailInput.value),
-        eventRole: escapeHTML(dropdownSelection.value)
-    };
+    const eventNameValue = escapeHTML(eventNameInput.value);
+    const repNameValue = escapeHTML(repNameInput.value);
+    const repEmailValue = escapeHTML(emailInput.value);
+    const eventRoleValue = escapeHTML(eventRoleInput.value);
     
-    const validationResults = validateFields(
-        values.eventName,
-        values.repName,
-        values.repEmail,
-        values.eventRole
-    );
+    const validationResults = validateAllFields(eventNameValue, repNameValue, repEmailValue, eventRoleValue);
     
     let inputsAreValid = true;
 
-
-    const eventNameInputValue = escapeHTML(eventNameInput.value);
-
-    const eventNameValidation = validateEventName(eventNameInputValue, eventNameInput);
-    if(!eventNameValidation["isValid"]) {
+    // Show errors
+    if(!validationResults.eventName.isValid) {
         inputsAreValid = false;
+        validationResults.eventName.errorMessages.forEach(m => displayInputError(eventNameInput, m));
     }
-    if(eventNameValidation["errorMessages"].length > 0) {
-        eventNameValidation["errorMessages"].forEach(m => {
-            displayInputError(eventNameInput, m);
-        })
-    }
-// function that gathers elements and values (input and input value). Initialize object, run validations, return object. 
-//extract logic that is interacting with DOM (displayinputerror and querySelectors 41/42)
 
-    // Representative validation
-    const repNameInputValue = escapeHTML(repNameInput.value);
-
-    const repNameValidation = validateRepName(repNameInputValue, repNameInput);
-    if(!repNameValidation["isValid"]) {
+    if (!validationResults.repName.isValid) {
         inputsAreValid = false;
-    }
-    if(repNameValidation["errorMessages"].length > 0) {
-        repNameValidation["errorMessages"].forEach(m => {
-            displayInputError(repNameInput, m);
-        })
+        validationResults.repName.errorMessages.forEach(m => displayInputError(repNameInput, m));
     }
 
-    // Email Validation
-    const emailInputValue = escapeHTML(emailInput.value);
-
-    const emailValidation = validateEmail(emailInputValue, emailInput);
-    if(!emailValidation["isValid"]) {
+    if (!validationResults.repEmail.isValid) {
         inputsAreValid = false;
-    }
-    if(emailValidation["errorMessages"].length > 0) {
-        emailValidation["errorMessages"].forEach(m => {
-            displayInputError(emailInput, m)
-        });
+        validationResults.repEmail.errorMessages.forEach(m => displayInputError(emailInput, m));
     }
 
-    // Dropdown Menu Validation
-    const dropdownSelectionValue = escapeHTML(dropdownSelection.value);
-
-    const dropdownSelectionValidation = validateDropdownSelection(dropdownSelectionValue, dropdownSelection);
-    if(!dropdownSelectionValidation["isValid"]) {
+    if (!validationResults.eventRole.isValid) {
         inputsAreValid = false;
-    }
-    if(dropdownSelectionValidation["errorMessages"].length > 0) {
-        dropdownSelectionValidation["errorMessages"].forEach(m => {
-            displayInputError(dropdownSelection, m)
-        });
+        validationResults.eventRole.errorMessages.forEach(m => displayInputError(eventRoleInput, m));
     }
 
     return inputsAreValid;
 }
 
+
 // Show error message
 function displayInputError(inputElement, message) {
     const inputContainer = inputElement.closest(".input-container");
     const error = document.createElement("span");
-
+    
     error.textContent = message;
     error.classList.add("input-error");
-
+    
     error.setAttribute("role", "alert");
-
+    
     inputContainer.appendChild(error);
 }
 
-// escape function
+// escape HTML function
 function escapeHTML(input) {
     return input
-        .replace(/&/g, "&amp;")
+    .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-}
-
-// Event input validation
-function validateEventName(input) {
-    let validEventName = true;
-    const errorMessage = [];
-
-    if (input == "") {
-        validEventName = false;
-        errorMessage.push("Please enter the community event name.");
     }
-    return {
-        isValid: validEventName,
-        errorMessages: errorMessage
-    };
-}
+    
+    // Event input validation
+    function validateEventName(input) {
+        const errorMessages = [];
+        
+        if (input == "") {
+            errorMessages.push("Please enter the community event name.");
+        }
+        return {
+            isValid: errorMessages.length === 0, errorMessages };
+        }
 
 // Name input validation
 function validateRepName(input) {
-    let validRepName = true;
-    const errorMessage = [];
-
-    if (input == "") {
-        validRepName = false;
-        errorMessage.push("Please enter the name of the Representative.");
+    const errorMessages = [];
+    if (input === "") {
+        errorMessages.push("Please enter the name of the Representative.");
     }
-    return {
-    isValid: validRepName,
-    errorMessages: errorMessage
-    };
+    return { isValid: errorMessages.length === 0, errorMessages };
 }
 
-// Email Input Validation
+// Email validation
 function validateEmail(input) {
-    let validEmail = true;
-    const errorMessage = [];
-
+    const errorMessages = [];
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-    const emailFollowsPattern = emailPattern.test(input);
-    if(!emailFollowsPattern) {
-        validEmail = false;
-        errorMessage.push("Please enter a valid email.");
+    if (!emailPattern.test(input)) {
+        errorMessages.push("Please enter a valid email.");
     }
-
-    return {isValid: validEmail, 
-        errorMessages: errorMessage
-    };
+    return { isValid: errorMessages.length === 0, errorMessages };
 }
 
-// Dropdown Menu Input Validation
-function validateDropdownSelection(input) {
-    let validSelection = true;
-    const errorMessage = [];
+// Event role dropdown validation
+function validateEventRole(input) {
+    const errorMessages = [];
 
-    if (input == "") {
-        validSelection = false;
-        errorMessage.push("Please choose an event role.")
+    if (input === "") {
+        errorMessages.push("Please choose an event role.");
     }
-    return {
-        isValid: validSelection,
-        errorMessages: errorMessage
-    };
+    return { isValid: errorMessages.length === 0, errorMessages };
 }
+
+// Function to collect event form data
+function getEventFormData() {
+        const eventNameInput = document.getElementById("field_event-name");
+        const repNameInput = document.getElementById("field_rep-name");
+        const emailInput = document.getElementById("field_email");
+        const eventRoleInput = document.getElementById("field_role-selection");
+    
+        return {
+            eventName: escapeHTML(eventNameInput.value),
+            repName: escapeHTML(repNameInput.value),
+            repEmail: escapeHTML(emailInput.value),
+            eventRole: escapeHTML(eventRoleInput.value),
+        };
+    }
