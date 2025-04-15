@@ -93,8 +93,19 @@ function validateDonationForm() {
     }
 
     // VALIDATE COMMENT/MESSAGE
+    const donationCommentValue = escapeHTML(donationCommentInputNode.value);
+    const donationCommentValidation = validateDonationComment(donationCommentValue, donationCommentInputNode);
 
-    
+    if (!donationCommentValidation["isValid"]) {
+        inputsAreValid = false;
+    }
+
+    if (donationCommentValidation["errorMessages"].length > 0) {
+        donationCommentValidation["errorMessages"].forEach(m => {
+            displayInputError(donationCommentInputNode, m)
+        });
+    }
+
     return inputsAreValid;
 }
 
