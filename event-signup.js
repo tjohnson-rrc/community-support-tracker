@@ -17,28 +17,49 @@ eventSignupForm.addEventListener("submit", (eventObj) => {
     }
 });
 
-// Extract data collection
-function getEventFormData() {
-    return {
-        eventName: escapeHTML(document.getElementById("field_event-name").value),
-        repName: escapeHTML(document.getElementById("field_rep-name").value),
-        repEmail: escapeHTML(document.getElementById("field_email").value),
-        eventRole: escapeHTML(document.getElementById("field_role-selection").value)
+// Validates all required fields
+function validateAllFields(eventName, repName, repEmail, eventRole){
+    const fieldValidations = {
+        eventName: validateEventName(eventName),
+        repName: validateRepName(repName),
+        repEmail: validateEmail(repEmail),
+        eventRole: validateDropdownSelection(eventRole)
     };
+
+
+    return fieldValidations
 }
 
 // Main Validation
 function validateEventForm() {
     const errorMessages = document.querySelectorAll(".input-error");
 
+    // Clear previous errors
     errorMessages.forEach(n => n.remove());
-
+    
+    // Collect form value inputs
+    const eventNameInput = document.getElementById("field_event-name");
+    const repNameInput = document.getElementById("field_rep-name");
+    const emailInput = document.getElementById("field_email");
+    const dropdownSelection = document.getElementById("field_role-selection");
+    
+    const values = {
+        eventName: escapeHTML(eventNameInput.value),
+        repName: escapeHTML(repNameInput.value),
+        repEmail: escapeHTML(emailInput.value),
+        eventRole: escapeHTML(dropdownSelection.value)
+    };
+    
+    const validationResults = validateFields(
+        values.eventName,
+        values.repName,
+        values.repEmail,
+        values.eventRole
+    );
+    
     let inputsAreValid = true;
 
-    // Beginning of validation for form submit
 
-    // Event name validation
-    const eventNameInput = document.getElementById("field_event-name");
     const eventNameInputValue = escapeHTML(eventNameInput.value);
 
     const eventNameValidation = validateEventName(eventNameInputValue, eventNameInput);
@@ -50,9 +71,10 @@ function validateEventForm() {
             displayInputError(eventNameInput, m);
         })
     }
+// function that gathers elements and values (input and input value). Initialize object, run validations, return object. 
+//extract logic that is interacting with DOM (displayinputerror and querySelectors 41/42)
 
     // Representative validation
-    const repNameInput = document.getElementById("field_rep-name");
     const repNameInputValue = escapeHTML(repNameInput.value);
 
     const repNameValidation = validateRepName(repNameInputValue, repNameInput);
@@ -66,7 +88,6 @@ function validateEventForm() {
     }
 
     // Email Validation
-    const emailInput = document.getElementById("field_email");
     const emailInputValue = escapeHTML(emailInput.value);
 
     const emailValidation = validateEmail(emailInputValue, emailInput);
@@ -80,7 +101,6 @@ function validateEventForm() {
     }
 
     // Dropdown Menu Validation
-    const dropdownSelection = document.getElementById("field_role-selection");
     const dropdownSelectionValue = escapeHTML(dropdownSelection.value);
 
     const dropdownSelectionValidation = validateDropdownSelection(dropdownSelectionValue, dropdownSelection);
