@@ -8,6 +8,7 @@ const donationCommentInputNode = document.querySelector("#field_donor-comment");
 let temporaryDonationData = {}
 
 
+
 // IMPLEMENTATION
 donationTrackerFormNode.addEventListener("submit", (eventObj) => {
     eventObj.preventDefault();
@@ -25,6 +26,30 @@ donationTrackerFormNode.addEventListener("submit", (eventObj) => {
     }
 })
 
+function validateDonationForm() {
+    // removes existing error messages
+    const errorMessagesNodes = document.querySelectorAll(".input-error");
+    errorMessagesNodes.forEach(n => n.remove());
+
+    const inputsAreValid = true
+
+    // PLACEHOLDERS VVVVV
+    // VALIDATE CHARITY NAME 
+    
+
+
+    // VALIDATE DONATION AMOUNT
+
+
+
+    // VALIDATE DATE OF DONATION
+
+
+
+    // VALIDATE COMMENT/MESSAGE
+
+    return inputsAreValid;
+}
 
 
 
