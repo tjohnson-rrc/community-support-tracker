@@ -1,0 +1,31 @@
+{
+  "name": "community-support-tracker",
+  "version": "1.0.0",
+  "description": "Submission for module 7 group project: Community Support Tracker. \r Including three main components: Donation Tracker, Volunteer Hours Tracker, and Event Signup.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjohnson-rrc/community-support-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tjohnson-rrc/community-support-tracker/issues"
+  },
+  "homepage": "https://github.com/tjohnson-rrc/community-support-tracker#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
+    "jsdom": "^26.1.0"
+  },
+  "jest": {
+  "reporters": [
+    "default",
+    ["jest-junit", { "outputDirectory": "test-results/jest" }]
+  ]
+}
+}
