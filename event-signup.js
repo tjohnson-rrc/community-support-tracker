@@ -1,31 +1,34 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Check if the form exists before proceeding
-    const eventSignupForm = document.getElementById("eventSignup");
-    if (!eventSignupForm) {
-        console.error("Form not found.");
-        return;
-    }
+function eventFormHandler() {
 
-    // function eventFormHandler() {
-    //     const eventSignupForm = document.getElementById("eventSignup");
-    //     if(!eventSignupForm) return;
-
-        eventSignupForm.addEventListener("submit", (eventObj) => {
-            eventObj.preventDefault();
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check if the form exists before proceeding
+        const eventSignupForm = document.getElementById("eventSignup");
+        if (!eventSignupForm) {
+            console.error("Form not found.");
+            return;
+        }
         
-            const inputsAreValid = validateEventForm();
-        
-            if(inputsAreValid) {
-                const eventFormData = getEventFormData();          
-                console.log("Temporarily storing form data", eventFormData);
+        // function eventFormHandler() {
+            //     const eventSignupForm = document.getElementById("eventSignup");
+            //     if(!eventSignupForm) return;
+            
+            eventSignupForm.addEventListener("submit", (eventObj) => {
+                eventObj.preventDefault();
                 
-                // comment out eventSignupForm().submit when testing
-                // eventSignupForm.submit();
-            } else {
-                console.warn("Invalid Inputs.");
-            }
+                const inputsAreValid = validateEventForm();
+                
+                if(inputsAreValid) {
+                    const eventFormData = getEventFormData();          
+                    console.log("Temporarily storing form data", eventFormData);
+                    
+                    // comment out eventSignupForm().submit when testing
+                    // eventSignupForm.submit();
+                } else {
+                    console.warn("Invalid Inputs.");
+                }
+            });
         });
-    });
+    }
 
 // Validates all required fields
 function validateAllFields(eventName, repName, repEmail, eventRole){
@@ -165,3 +168,20 @@ function getEventFormData() {
             eventRole: escapeHTML(eventRoleInput.value),
         };
     }
+
+    if (typeof window !== "undefined") {
+        eventFormHandler();
+    }
+
+    module.exports = {
+        eventFormHandler,
+        validateEventForm,
+        validateAllFields,
+        validateEventName,
+        validateRepName,
+        validateEmail,
+        validateEventRole,
+        getEventFormData,
+        escapeHTML,
+        displayInputError
+    };
