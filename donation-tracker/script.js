@@ -9,7 +9,6 @@ function initDomNodes() {
         donationAmountInputNode: document.querySelector("#field_donation-amount"),
         donationDateInputNode: document.querySelector("#field_donation-date"),
         donationCommentInputNode: document.querySelector("#field_donor-comment"),
-        donationSuccessNode: document.querySelector("#donation-success")
     };
 }
 
@@ -234,8 +233,12 @@ function escapeHTML(input) {
         .replace(/'/g, "&#039;");
 }
 
-// If our runtime environment isn't the browser, export the functions needed.
-if (typeof window === "undefined") {
+// If our runtime environment is the browser, incoke the event listener/page load
+if (typeof window !== "undefined") {
+    // CITATION: https://developer.mozilla.org/en-US/docs/Web/API/Window
+    window.addEventListener('DOMContentLoaded', init);
+} else {
+    // if not, export these functions so that they can be used in external files
     module.exports = {
         collectTemporaryDonationData,
         validateDonationForm,
@@ -244,6 +247,9 @@ if (typeof window === "undefined") {
         validateDonationDate,
         validateDonationComment,
         displayInputError,
-        escapeHTML
-    }
+        escapeHTML,
+        handleDonationFormSubmission,
+        initDomNodes,
+        init
+    };
 }
