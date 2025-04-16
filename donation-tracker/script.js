@@ -13,6 +13,7 @@ function initDomNodes() {
 }
 
 // MAIN INITIALIZATION
+// this gets invoked all the way at the bottom of script
 function init() {
     const nodes = initDomNodes();
     
@@ -134,13 +135,13 @@ function validateCharityName(input) {
     let validCharityName = true;
     const errorMessages = [];
 
-    const charityNamePattern = /^[A-Z]{4,}$/i;
+    const charityNamePattern = /^[A-Za-z]([a-zA-Z0-9 ]|[- @\.#&!]){3,}$/;
     
     const charityNameFollowsPattern = charityNamePattern.test(input);
 
     if (!charityNameFollowsPattern) {
         validCharityName = false;
-        errorMessages.push("Please provide a charity name more than 3 alphabetical characters!");
+        errorMessages.push("Please provide a valid charity name that's 4 or more characters!");
     }
 
     return {
