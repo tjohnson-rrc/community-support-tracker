@@ -143,5 +143,70 @@ describe("Donation Form Validation Functions", () => {
     });
 
     
+    // Test validateDonationDate function
+    // may see me isnerting objects WITH a value property in some of the tests for date.
+    // That is because the validation function for date expects that input.
+    describe("validateDonationDate", () => {
+        test("valid date (today) returns isValid true", () => {
+            // Arrange
+            const today = new Date();
+            const formattedToday = today.toISOString().split("T")[0];
+            
+            // Act
+            const result = validateDonationDate({ value: formattedToday });
+            
+            // Assert
+            expect(result["isValid"]).toBe(true);
+        });
+        
+        test("valid date (past) returns isValid true", () => {
+            // Arrange
+            const pastDate = "2023-01-15";
+            
+            // Act
+            const result = validateDonationDate({ value: pastDate });
+            
+            // Assert
+            expect(result["isValid"]).toBe(true);
+        });
+        
+        test("future date returns isValid false", () => {
+            // Arrange
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const formattedTomorrow = tomorrow.toISOString().split("T")[0];
+            
+            // Act
+            const result = validateDonationDate(formattedTomorrow);
+            
+            // Assert
+            expect(result["isValid"]).toBe(false);
+        });
+        
+        test("future date error message contains correct text", () => {
+            // Arrange
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const formattedTomorrow = tomorrow.toISOString().split("T")[0];
+            
+            // Act
+            const result = validateDonationDate({ value: formattedTomorrow });
+            
+            // Assert
+            expect(result.errorMessages[0].includes("a date that isn't in the future!")).toBe(true);
+        });
+        
+        test("empty date returns isValid false", () => {
+            // Arrange
+            const emptyDate = "";
+            
+            // Act
+            const result = validateDonationDate(emptyDate);
+            
+            // Assert
+            expect(result["isValid"]).toBe(false);
+        });
+        
+    });
 
 });
