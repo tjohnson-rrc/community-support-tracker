@@ -8,36 +8,7 @@ const donationCommentInputNode = document.querySelector("#field_donor-comment");
 let temporaryDonationData = {}
 
 // IMPLEMENTATION
-function initDonationTracker() {
-    if (donationTrackerFormNode) {
-        donationTrackerFormNode.addEventListener("submit", handleDonationFormSubmit());
-    }
-}
-
-function handleDonationFormSubmit(eventObj) {
-    eventObj.preventDefault();
-
-    const inputsAreValid = validateDonationForm();
-
-    if (inputsAreValid) {
-
-        // FUNCTION THAT STORES TEMPORARY DATA 
-        collectTemporaryDonationData();
-        // Displays the temporary donation data when user submits  
-        console.log("Donation submitted: ", temporaryDonationData);
-
-        // Set a timeout just to see the console.log before page refreshes
-        // for testing purposes 
-        setTimeout(() => {
-            donationTrackerFormNode.submit();
-        }, 15000);
-
-    } else {
-        console.warn("Invalid inputs.");
-    }
-}
-
-/* donationTrackerFormNode.addEventListener("submit", (eventObj) => {
+donationTrackerFormNode.addEventListener("submit", (eventObj) => {
     eventObj.preventDefault();
 
     const inputsAreValid = validateDonationForm();
@@ -59,12 +30,12 @@ function handleDonationFormSubmit(eventObj) {
         console.warn("Invalid inputs.");
     }
 })
-*/
+
 function collectTemporaryDonationData() {
-    charityNameValue = escapeHTML(charityNameInputNode.value);
-    donationAmountValue = escapeHTML(donationAmountInputNode.value);
-    donationDateValue = donationDateInputNode.value;
-    donationCommentValue = escapeHTML(donationCommentInputNode.value);
+    const charityNameValue = escapeHTML(charityNameInputNode.value);
+    const donationAmountValue = escapeHTML(donationAmountInputNode.value);
+    const donationDateValue = donationDateInputNode.value;
+    const donationCommentValue = escapeHTML(donationCommentInputNode.value.trim());
 
     // This is grabbing the global variable and assigning new values.
     temporaryDonationData = {
