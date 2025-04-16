@@ -1,43 +1,60 @@
 // NODES AND VARIABLES
-const donationTrackerFormNode = document.querySelector("#donation-tracker-form");
-const charityNameInputNode = document.querySelector("#field_charity-name");
-const donationAmountInputNode = document.querySelector("#field_donation-amount");
-const donationDateInputNode = document.querySelector("#field_donation-date");
-const donationCommentInputNode = document.querySelector("#field_donor-comment");
+let temporaryDonationData = {};
 
-let temporaryDonationData = {}
+// Initialize the DOM nodes after the document is loaded (invoked at the bottom)
+function initDomNodes() {
+    return {
+        donationTrackerFormNode: document.querySelector("#donation-tracker-form"),
+        charityNameInputNode: document.querySelector("#field_charity-name"),
+        donationAmountInputNode: document.querySelector("#field_donation-amount"),
+        donationDateInputNode: document.querySelector("#field_donation-date"),
+        donationCommentInputNode: document.querySelector("#field_donor-comment"),
+        donationSuccessNode: document.querySelector("#donation-success")
+    };
+}
 
-// IMPLEMENTATION
-donationTrackerFormNode.addEventListener("submit", (eventObj) => {
-    eventObj.preventDefault();
+// MAIN INITIALIZATION
+function init() {
+    const nodes = initDomNodes();
+    
+    if (nodes.donationTrackerFormNode) {
+        nodes.donationTrackerFormNode.addEventListener("submit", (eventObj) => {
+            eventObj.preventDefault();
+            handleDonationFormSubmission(nodes);
+        });
+    }
+}
 
-    const inputsAreValid = validateDonationForm();
+// Form submission handler
+function handleDonationFormSubmission(nodes) {
+    const inputsAreValid = validateDonationForm(nodes);
 
     if (inputsAreValid) {
 
         // FUNCTION THAT STORES TEMPORARY DATA 
-        collectTemporaryDonationData();
+        collectTemporaryDonationData(nodes);
         // Displays the temporary donation data when user submits  
         console.log("Donation submitted: ", temporaryDonationData);
 
         // Set a timeout just to see the console.log before page refreshes
         // for testing purposes 
         setTimeout(() => {
-            donationTrackerFormNode.submit();
+            nodes.donationTrackerFormNode.submit();
         }, 15000);
 
     } else {
         console.warn("Invalid inputs.");
     }
-})
+}
 
-function collectTemporaryDonationData() {
-    const charityNameValue = escapeHTML(charityNameInputNode.value);
-    const donationAmountValue = escapeHTML(donationAmountInputNode.value);
-    const donationDateValue = donationDateInputNode.value;
-    const donationCommentValue = escapeHTML(donationCommentInputNode.value.trim());
+// IMPLEMENTATION
+function collectTemporaryDonationData(nodes) {
+    const charityNameValue = escapeHTML(nodes.charityNameInputNode.value);
+    const donationAmountValue = escapeHTML(nodes.donationAmountInputNode.value);
+    const donationDateValue = nodes.donationDateInputNode.value;
+    const donationCommentValue = escapeHTML(nodes.donationCommentInputNode.value.trim());
 
-    // This is grabbing the global variable and assigning new values.
+    // This is grabbing the global variable invoked at topp and assigning new values.
     temporaryDonationData = {
         charityName: charityNameValue,
         donationAmount: donationAmountValue,
@@ -48,7 +65,7 @@ function collectTemporaryDonationData() {
     return temporaryDonationData;
 }
 
-function validateDonationForm() {
+function validateDonationForm(nodes) {
     // Removes existing error messages
     const errorMessagesNodes = document.querySelectorAll(".input-error");
     errorMessagesNodes.forEach(n => n.remove());
@@ -56,8 +73,8 @@ function validateDonationForm() {
     let inputsAreValid = true
 
     // VALIDATE CHARITY NAME 
-    const charityNameValue = escapeHTML(charityNameInputNode.value);
-    const charityNameValidation = validateCharityName(charityNameValue, charityNameInputNode);
+    const charityNameValue = escapeHTML(nodes.charityNameInputNode.value);
+    const charityNameValidation = validateCharityName(charityNameValue, nodes.charityNameInputNode);
 
     if (!charityNameValidation["isValid"]) {
         inputsAreValid = false;
@@ -65,13 +82,13 @@ function validateDonationForm() {
 
     if (charityNameValidation["errorMessages"].length > 0) {
         charityNameValidation["errorMessages"].forEach(m => {
-            displayInputError(charityNameInputNode, m)
+            displayInputError(nodes.charityNameInputNode, m)
         });
     }
 
     // VALIDATE DONATION AMOUNT
-    const donationAmountValue = escapeHTML(donationAmountInputNode.value);
-    const donationAmountValidation = validateDonationAmount(donationAmountValue, donationAmountInputNode);
+    const donationAmountValue = escapeHTML(nodes.donationAmountInputNode.value);
+    const donationAmountValidation = validateDonationAmount(donationAmountValue, nodes.donationAmountInputNode);
 
     if (!donationAmountValidation["isValid"]) {
         inputsAreValid = false;
@@ -79,12 +96,12 @@ function validateDonationForm() {
 
     if (donationAmountValidation["errorMessages"].length > 0) {
         donationAmountValidation["errorMessages"].forEach(m => {
-            displayInputError(donationAmountInputNode, m)
+            displayInputError(nodes.donationAmountInputNode, m)
         });
     }
 
     // VALIDATE DATE OF DONATION
-    const donationDateValidation = validateDonationDate(donationDateInputNode);
+    const donationDateValidation = validateDonationDate(nodes.donationDateInputNode);
 
     if (!donationDateValidation["isValid"]) {
         inputsAreValid = false;
@@ -92,13 +109,13 @@ function validateDonationForm() {
 
     if (donationDateValidation["errorMessages"].length > 0) {
         donationDateValidation["errorMessages"].forEach(m => {
-            displayInputError(donationDateInputNode, m)
+            displayInputError(nodes.donationDateInputNode, m)
         });
     }
 
     // VALIDATE COMMENT/MESSAGE
-    const donationCommentValue = escapeHTML(donationCommentInputNode.value);
-    const donationCommentValidation = validateDonationComment(donationCommentValue, donationCommentInputNode);
+    const donationCommentValue = escapeHTML(nodes.donationCommentInputNode.value);
+    const donationCommentValidation = validateDonationComment(donationCommentValue, nodes.donationCommentInputNode);
 
     if (!donationCommentValidation["isValid"]) {
         inputsAreValid = false;
@@ -106,7 +123,7 @@ function validateDonationForm() {
 
     if (donationCommentValidation["errorMessages"].length > 0) {
         donationCommentValidation["errorMessages"].forEach(m => {
-            displayInputError(donationCommentInputNode, m)
+            displayInputError(nodes.donationCommentInputNode, m)
         });
     }
 
@@ -217,7 +234,7 @@ function escapeHTML(input) {
         .replace(/'/g, "&#039;");
 }
 
-// If our runtime environment isn't the browser, export the modules needed.
+// If our runtime environment isn't the browser, export the functions needed.
 if (typeof window === "undefined") {
     module.exports = {
         collectTemporaryDonationData,
