@@ -206,6 +206,54 @@ describe("Donation Form Validation Functions", () => {
             // Assert
             expect(result["isValid"]).toBe(false);
         });
+    });
+
+    // Test validateDonationComment function
+    describe("validateDonationComment", () => {
+        test("valid comment returns isValid true", () => {
+            // Arrange
+            const validComment = "This is a valid comment";
+            
+            // Act
+            const result = validateDonationComment(validComment);
+            
+            // Assert
+            expect(result["isValid"]).toBe(true);
+        });
+        
+        test("empty comment returns isValid false", () => {
+            // Arrange
+            const emptyComment = "";
+            
+            // Act
+            const result = validateDonationComment(emptyComment);
+            
+            // Assert
+            expect(result["isValid"]).toBe(false);
+        });
+        
+        test("empty comment error message contains correct text", () => {
+            // Arrange
+            const emptyComment = "";
+            
+            // Act
+            const result = validateDonationComment(emptyComment);
+            
+            // Assert
+            expect(result.errorMessages[0].includes("provide a donation comment")).toBe(true);
+        });
+        
+        test("comment longer than 200 characters returns isValid false", () => {
+            // Arrange
+            // CITATION: https://docs.vultr.com/javascript/standard-library/String/repeat
+            const longComment = "a".repeat(201);
+            
+            // Act
+            const result = validateDonationComment(longComment);
+            
+            // Assert
+            expect(result["isValid"]).toBe(false);
+        });
         
     });
 
