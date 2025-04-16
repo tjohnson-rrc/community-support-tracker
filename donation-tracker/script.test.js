@@ -129,8 +129,19 @@ describe("Donation Form Validation Functions", () => {
             // Assert
             expect(result["isValid"]).toBe(false);
         });
+
+        test("empty donation amount returns isValid false", () => {
+            // Arrange
+            const invalidAmount = "";
+            
+            // Act
+            const result = validateDonationAmount(invalidAmount);
+            
+            // Assert
+            expect(result["isValid"]).toBe(false);
+        });
     });
 
-
+    
 
 });
