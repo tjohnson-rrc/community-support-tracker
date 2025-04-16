@@ -216,3 +216,17 @@ function escapeHTML(input) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+// If our runtime environment isn't the browser, export the modules needed.
+if (typeof window === "undefined") {
+    module.exports = {
+        collectTemporaryDonationData,
+        validateDonationForm,
+        validateCharityName,
+        validateDonationAmount,
+        validateDonationDate,
+        validateDonationComment,
+        displayInputError,
+        escapeHTML
+    }
+}
