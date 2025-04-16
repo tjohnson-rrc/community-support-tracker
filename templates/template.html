@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template</title>
+    <link rel="stylesheet" href="./template-styles.css">
+</head>
+<body>
+    
+    <h1>Volunteer hour tracker</h1>
+    <form id="volunteer-form">
+        <div class="form-group">
+            <label for="charity">Charity Name</label>
+
+            <input type="text" id="charity" name="charity" placeholder="e.g for the community support"/>
+            
+        </div>
+
+        <!--amount of hours volunteered-->
+        <div class="form-group">
+            <label for="hours">Hours Volunteered</label>
+            <input type="number" id="hours" name="hours" min="0" step="0.1" placeholder="e.g. 3.5"/>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Date of Volunteering</label>
+            <input type="date" id="date" name="date" required />
+        </div>
+
+        <div class="form-group">
+            <label>Volunteer Experience Rating</label>
+            
+
+                <div class="rating">
+                    <input type="radio" id="star5" name="rating" value="5" />
+                    <label for="star5">&#9733;</label>
+                    
+                    <input type="radio" id="star4" name="rating" value="4" />
+                    <label for="star4">&#9733;</label>
+                    
+                    <input type="radio" id="star3" name="rating" value="3" />
+                    <label for="star3">&#9733;</label>
+                    
+                    <input type="radio" id="star2" name="rating" value="2" />
+                    <label for="star2">&#9733;</label>
+                    
+                    <input type="radio" id="star1" name="rating" value="1" />
+                    <label for="star1">&#9733;</label>
+                </div>
+            </div>
+            <script src="script.js"></script>
+        </body>
+        <button type="submit">Submit</button>
+    
+    </form>
+</html>
