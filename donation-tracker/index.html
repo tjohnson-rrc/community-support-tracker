@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../templates/template-styles.css"/>
+    <title>Community Support Tracker</title>
+</head>
+<body>
+
+    <!-- Still missing Header from template -->
+     <!-- Still missing Nav from template -->
+    <main>
+        <form id="donation-tracker-form">
+            <fieldset>
+                <legend>Donation Information</legend>
+
+                <div class="input-container">
+                    <label for="field_charity-name">Charity Name</label>
+                    <input type="text" name="charityName" id="field_charity-name"
+                            placeholder="Enter charity name:"/>
+                </div>
+
+                <div class="input-container">
+                    <label for="field_donation-amount">Donation Amount</label>
+                    <input type="text" name="donationAmount" id="field_donation-amount"
+                            placeholder="Enter donation amount ($):"/>
+                </div>
+
+                <div class="input-container">
+                    <label for="field_donation-date">Date of Donation</label>
+                    <input type="date" name="donationDate" id="field_donation-date"/>
+                </div>
+
+                <div class="input-container">
+                    <label for="field_donor-comment">Comment or Message</label>
+                    <textarea name="donorComment" id="field_donor-comment"
+                                placeholder="Enter your comment or message:"></textarea>
+                </div>
+            </fieldset>
+
+            <div class="button">
+                <input type="submit" value="Submit"/>
+            </div>
+
+        </form>
+    </main>
+    <!-- Still missing Footer from template -->
+     
+    <script src="./script.js"></script>
+</body>
+</html>
