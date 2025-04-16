@@ -8,7 +8,36 @@ const donationCommentInputNode = document.querySelector("#field_donor-comment");
 let temporaryDonationData = {}
 
 // IMPLEMENTATION
-donationTrackerFormNode.addEventListener("submit", (eventObj) => {
+function initDonationTracker() {
+    if (donationTrackerFormNode) {
+        donationTrackerFormNode.addEventListener("submit", handleDonationFormSubmit());
+    }
+}
+
+function handleDonationFormSubmit(eventObj) {
+    eventObj.preventDefault();
+
+    const inputsAreValid = validateDonationForm();
+
+    if (inputsAreValid) {
+
+        // FUNCTION THAT STORES TEMPORARY DATA 
+        collectTemporaryDonationData();
+        // Displays the temporary donation data when user submits  
+        console.log("Donation submitted: ", temporaryDonationData);
+
+        // Set a timeout just to see the console.log before page refreshes
+        // for testing purposes 
+        setTimeout(() => {
+            donationTrackerFormNode.submit();
+        }, 15000);
+
+    } else {
+        console.warn("Invalid inputs.");
+    }
+}
+
+/* donationTrackerFormNode.addEventListener("submit", (eventObj) => {
     eventObj.preventDefault();
 
     const inputsAreValid = validateDonationForm();
@@ -30,7 +59,7 @@ donationTrackerFormNode.addEventListener("submit", (eventObj) => {
         console.warn("Invalid inputs.");
     }
 })
-
+*/
 function collectTemporaryDonationData() {
     charityNameValue = escapeHTML(charityNameInputNode.value);
     donationAmountValue = escapeHTML(donationAmountInputNode.value);
