@@ -114,15 +114,15 @@ function escapeHTML(input) {
     }
     
     // Event input validation
-    function validateEventName(input) {
-        const errorMessages = [];
-        
-        if (input == "") {
-            errorMessages.push("Please enter the community event name.");
-        }
-        return {
-            isValid: errorMessages.length === 0, errorMessages };
-        }
+function validateEventName(input) {
+    const errorMessages = [];
+    
+    if (input == "") {
+        errorMessages.push("Please enter the community event name.");
+    }
+    return {
+        isValid: errorMessages.length === 0, errorMessages };
+    }
 
 // Name input validation
 function validateRepName(input) {
@@ -171,17 +171,18 @@ function getEventFormData() {
 
     if (typeof window !== "undefined") {
         eventFormHandler();
+    } else {
+        
+        module.exports = {
+            eventFormHandler,
+            validateEventForm,
+            validateAllFields,
+            validateEventName,
+            validateRepName,
+            validateEmail,
+            validateEventRole,
+            getEventFormData,
+            escapeHTML,
+            displayInputError
+        };
     }
-
-    module.exports = {
-        eventFormHandler,
-        validateEventForm,
-        validateAllFields,
-        validateEventName,
-        validateRepName,
-        validateEmail,
-        validateEventRole,
-        getEventFormData,
-        escapeHTML,
-        displayInputError
-    };
