@@ -1,12 +1,11 @@
 const {
     collectTemporaryDonationData,
-        validateDonationForm,
-        validateCharityName,
-        validateDonationAmount,
-        validateDonationDate,
-        validateDonationComment,
-        displayInputError,
-        escapeHTML
+    validateDonationForm,
+    validateCharityName,
+    validateDonationAmount,
+    validateDonationDate,
+    validateDonationComment,
+    displayInputError,
 } = require("./script");
 
 const { JSDOM } = require("jsdom");
@@ -258,3 +257,39 @@ describe("Donation Form Validation Functions", () => {
     });
 
 });
+
+describe("Donation Form Integration Tets", () => {
+    /* CITATION: https://jestjs.io/docs/api#beforeeachfn-timeout 
+    beforeEach is exactly what the name implies, it creates a new DOM
+    environment BEFORE EACH test. 
+    */
+    beforeEach(() => {
+        // Just a basic HTML without semantics; just for testing environment. :)
+        testDom = new JSDOM(`
+            <!DOCTYPE html>
+            <html>
+                <body>
+                    <form id="donation-tracker-form">
+                        <div class="input-container">
+                            <input type="text" id="field_charity-name" name="charityName" value="Red River College">
+                        </div>
+                        <div class="input-container">
+                            <input type="text" id="field_donation-amount" name="donationAmount" value="100">
+                        </div>
+                        <div class="input-container">
+                            <input type="date" id="field_donation-date" name="donationDate" value="2023-04-15">
+                        </div>
+                        <div class="input-container">
+                            <textarea id="field_donor-comment" name="donorComment">Ozzy is cute!</textarea>
+                        </div>
+                        <div class="button">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </body>
+            </html>
+            `);
+
+    })
+
+})
