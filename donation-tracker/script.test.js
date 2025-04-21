@@ -259,6 +259,12 @@ describe("Donation Form Validation Functions", () => {
 });
 
 describe("Donation Form Integration Tets", () => {
+
+    let testDom;
+    let document;
+    let window;
+    let nodes;
+
     /* CITATION: https://jestjs.io/docs/api#beforeeachfn-timeout 
     beforeEach is exactly what the name implies, it creates a new DOM
     environment BEFORE EACH test. 
@@ -342,6 +348,22 @@ describe("Donation Form Integration Tets", () => {
             // Assert
             expect(result.donorComment).toBe("Ozzy is cute!");
         });
+    })
+
+    // ************************* COME BACK TO THIS ****************************************************
+    // Test displayInputError function
+    describe("displayInputError", () => {
+        test("sets message and displays error message in HTML element", () => {
+            // Arrange
+            nodes.charityNameInputNode.value = "";
+
+            // Act
+            displayInputError(nodes.charityNameInputNode, "Please provide a valid charity name that's 4 or more characters!");
+            const errorSpan = document.querySelector(".input-error");
+
+            // Assert
+            expect(errorSpan.textContent).toBe("Please provide a valid charity name that's 4 or more characters!");
+        })
     })
 
 })
