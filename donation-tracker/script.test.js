@@ -305,9 +305,43 @@ describe("Donation Form Integration Tets", () => {
             donationCommentInputNode: document.querySelector("#field_donor-comment")
         };
 
-        // Reset temporaryDonationData
+        // Reset temporaryDonationData for each test to run smoothly.
         global.temporaryDonationData = {};
     });
 
-    
+    // Test collectTemporaryDonationData function
+    describe("collectTemporaryDonationData", () => {
+        test("properly collects data with the right charity name", () => {
+            // Act
+            const result = collectTemporaryDonationData(nodes);
+
+            // Assert
+            expect(result.charityName).toBe("Red River College");
+        });
+
+        test("properly collects data with the right donation amount", () => {
+            // Act
+            const result = collectTemporaryDonationData(nodes);
+
+            // Assert
+            expect(result.donationAmount).toBe("100");
+        });
+
+        test("properly collects data with the right donation date", () => {
+            // Act
+            const result = collectTemporaryDonationData(nodes);
+
+            // Assert
+            expect(result.donationDate).toBe("2023-04-15");
+        });
+
+        test("properly collects data with a valid donation comment", () => {
+            // Act
+            const result = collectTemporaryDonationData(nodes);
+
+            // Assert
+            expect(result.donorComment).toBe("Ozzy is cute!");
+        });
+    })
+
 })
