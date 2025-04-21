@@ -1,0 +1,129 @@
+/* CSS CAN BE EDITED PER PAGE BASED ON WHAT WORKS FOR YOU :) */
+
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body {
+    font-family:Arial, Helvetica, sans-serif;
+    background-color: #C9ADA7;
+    color: #22223B;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+  }
+
+  header,
+  nav,
+  section,
+  footer {
+    width: 100%;
+    max-width: 800px;
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1.2px solid #4A4E69;
+    background-color: #F2E9E4;
+  }
+
+  /*RESPONSIVE DESIGN*/
+  @media (max-width: 600px) {
+    body {
+        padding: 30px;
+    }
+
+    header,
+    nav,
+    section,
+    footer {
+        padding: 30px;
+    }
+  }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #C9ADA7;
+  margin: 0;
+  padding: 0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+  gap: 5px;
+}
+
+.rating input {
+  display: none;
+
+}
+
+.rating label {
+  font-size: 1.5rem;
+  color: #22223B;
+  cursor: pointer;
+
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: #003366;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+
+button:hover {
+  background-color: #005599;
+}
+
+
+
+.rating input {
+  display: none;
+}
+
+.rating label {
+  font-size: 2rem;
+  color: black;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.rating input:checked ~ label {
+  color: goldenrod;
+}
+
+.rating label:hover,
+.rating label:hover ~ label {
+  color: goldenrod;
+}
