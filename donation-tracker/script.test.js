@@ -290,6 +290,24 @@ describe("Donation Form Integration Tets", () => {
             </html>
             `);
 
-    })
+        // variables
+        window = testDom.window;
+        document = window.document;
+        global.document = document;
+        global.window = window;
 
+        // Initialize DOM nodes for testing
+        nodes = {
+            donationTrackerFormNode: document.querySelector("#donation-tracker-form"),
+            charityNameInputNode: document.querySelector("#field_charity-name"),
+            donationAmountInputNode: document.querySelector("#field_donation-amount"),
+            donationDateInputNode: document.querySelector("#field_donation-date"),
+            donationCommentInputNode: document.querySelector("#field_donor-comment")
+        };
+
+        // Reset temporaryDonationData
+        global.temporaryDonationData = {};
+    });
+
+    
 })
