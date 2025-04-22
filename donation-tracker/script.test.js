@@ -9,6 +9,8 @@ const {
     init,
     initDomNodes,
     displayInputError,
+    getTemporaryDonationData,
+    setTemporaryDonationData
 } = require("./script");
 
 const { JSDOM } = require("jsdom");
@@ -264,8 +266,6 @@ describe("Donation Form Validation Functions", () => {
 describe("Data Processing Tests and Donation Form Integration", () => {
 
     let testDom;
-    let document;
-    let window;
     let nodes;
 
     /* CITATION: https://jestjs.io/docs/api#beforeeachfn-timeout 
@@ -417,9 +417,27 @@ describe("Data Processing Tests and Donation Form Integration", () => {
             const errorMessageSpan = global.document.querySelector(".input-error");
             expect(errorMessageSpan.textContent).toBe("Please provide a donation comment!");
         });
+
+        test("form submission with valid data updates temporaryDonationData correctly.", () => {
+            // Arrange
+            const expectedData = {
+                charityName: "Red River College",
+                donationAmount: "100",
+                donationDate: "2023-04-15",
+                donorComment: "Ozzy is cute!"
+            }
+            
+            // Act
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
+            const actualData = getTemporaryDonationData();
+
+
+            // Assert
+            expect(actualData).toEqual(expectedData);
+        });
     });
-
-
-
 
 })
