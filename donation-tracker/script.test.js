@@ -297,18 +297,16 @@ describe("Donation Form Integration Tets", () => {
             `);
 
         // variables
-        window = testDom.window;
-        document = window.document;
-        global.document = document;
-        global.window = window;
+        global.document = testDom.window.document;
+        global.window = testDom.window;
 
         // Initialize DOM nodes for testing
         nodes = {
-            donationTrackerFormNode: document.querySelector("#donation-tracker-form"),
-            charityNameInputNode: document.querySelector("#field_charity-name"),
-            donationAmountInputNode: document.querySelector("#field_donation-amount"),
-            donationDateInputNode: document.querySelector("#field_donation-date"),
-            donationCommentInputNode: document.querySelector("#field_donor-comment")
+            donationTrackerFormNode: global.document.querySelector("#donation-tracker-form"),
+            charityNameInputNode: global.document.querySelector("#field_charity-name"),
+            donationAmountInputNode: global.document.querySelector("#field_donation-amount"),
+            donationDateInputNode: global.document.querySelector("#field_donation-date"),
+            donationCommentInputNode: global.document.querySelector("#field_donor-comment")
         };
 
         // Reset temporaryDonationData for each test to run smoothly.
@@ -348,22 +346,59 @@ describe("Donation Form Integration Tets", () => {
             // Assert
             expect(result.donorComment).toBe("Ozzy is cute!");
         });
-    })
+    });
 
-    // ************************* COME BACK TO THIS ****************************************************
-    // Test displayInputError function
-    describe("displayInputError", () => {
-        test("sets message and displays error message in HTML element", () => {
+    // Test validateDonationForm function
+    describe("validateDonationForm", () => {
+        test("with invalid charity name displays corresponding error message in HTML element", () => {
             // Arrange
-            nodes.charityNameInputNode.value = "";
+            nodes.charityNameInputNode.value = "Zach's cat$ @re cut3!";
 
             // Act
-            displayInputError(nodes.charityNameInputNode, "Please provide a valid charity name that's 4 or more characters!");
-            const errorSpan = document.querySelector(".input-error");
+            validateDonationForm(nodes);
 
             // Assert
-            expect(errorSpan.textContent).toBe("Please provide a valid charity name that's 4 or more characters!");
-        })
-    })
+            const errorMessageSpan = global.document.querySelector(".input-error");
+            expect(errorMessageSpan.textContent).toBe("Please provide a valid charity name that's 4 or more characters!");
+        });
+
+        test("with invalid donation amount displays corresponding error message in HTML element", () => {
+            // Arrange
+            nodes.donationAmountInputNode.value = "Zach's cat$ @re cut3!";
+
+            // Act
+            validateDonationForm(nodes);
+
+            // Assert
+            const errorMessageSpan = global.document.querySelector(".input-error");
+            expect(errorMessageSpan.textContent).toBe("Please provide a valid donation amount!");
+        });
+
+        test("with invalid donation date displays corresponding error message in HTML element", () => {
+            // Arrange
+            nodes.donationDateInputNode.value = "";
+
+            // Act
+            validateDonationForm(nodes);
+
+            // Assert
+            const errorMessageSpan = global.document.querySelector(".input-error");
+            expect(errorMessageSpan.textContent).toBe("Please select a date of when the donation was made!");
+        });
+
+        test("with invalid donation comment displays corresponding error message in HTML element", () => {
+            // Arrange
+            nodes.donationCommentInputNode.value = "";
+
+            // Act
+            validateDonationForm(nodes);
+
+            // Assert
+            const errorMessageSpan = global.document.querySelector(".input-error");
+            expect(errorMessageSpan.textContent).toBe("Please provide a donation comment!");
+        });
+    });
+
+
 
 })
