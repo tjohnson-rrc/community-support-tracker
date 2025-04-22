@@ -26,13 +26,13 @@ function init() {
 }
 
 // Form submission handler
-function handleDonationFormSubmission(nodes) {
+function handleDonationFormSubmission(nodes, tempData) {
     const inputsAreValid = validateDonationForm(nodes);
 
     if (inputsAreValid) {
 
         // FUNCTION THAT STORES TEMPORARY DATA 
-        collectTemporaryDonationData(nodes);
+        tempData = collectTemporaryDonationData(nodes);
         // Displays the temporary donation data when user submits  
         console.log("Donation submitted: ", temporaryDonationData);
 

@@ -5,6 +5,9 @@ const {
     validateDonationAmount,
     validateDonationDate,
     validateDonationComment,
+    handleDonationFormSubmission,
+    init,
+    initDomNodes,
     displayInputError,
 } = require("./script");
 
@@ -258,7 +261,7 @@ describe("Donation Form Validation Functions", () => {
 
 });
 
-describe("Donation Form Integration Tets", () => {
+describe("Data Processing Tests and Donation Form Integration", () => {
 
     let testDom;
     let document;
@@ -289,7 +292,7 @@ describe("Donation Form Integration Tets", () => {
                             <textarea id="field_donor-comment" name="donorComment">Ozzy is cute!</textarea>
                         </div>
                         <div class="button">
-                            <input type="submit" value="Submit">
+                            <input type="submit" class="submitButton" value="Submit">
                         </div>
                     </form>
                 </body>
@@ -349,20 +352,29 @@ describe("Donation Form Integration Tets", () => {
     });
 
     // Test validateDonationForm function
-    describe("validateDonationForm", () => {
-        test("with invalid charity name displays corresponding error message in HTML element", () => {
+    describe("handleDonationFormSubmission", () => {
+        test("with invalid charity name displays corresponding error message in HTML element on submission", () => {
             // Arrange
             nodes.charityNameInputNode.value = "Zach's cat$ @re cut3!";
+            initDomNodes();
+            init();
 
             // Act
-            validateDonationForm(nodes);
+            // CITATION: https://developer.mozilla.org/en-US/docs/Web/API/Document/createEvent
+            // CITATION: https://developer.mozilla.org/en-US/docs/Web/API/Event/initEvent
+            // both are deprecated, but forced to use it as `new SubmitEvent` wouldn't work
+            // and kept on giving me errors for hours....... this works for now!
+            // CITATION OF SubmitEvent: https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent/SubmitEvent
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
 
             // Assert
             const errorMessageSpan = global.document.querySelector(".input-error");
             expect(errorMessageSpan.textContent).toBe("Please provide a valid charity name that's 4 or more characters!");
         });
 
-        test("with invalid donation amount displays corresponding error message in HTML element", () => {
+        test("with invalid donation amount displays corresponding error message in HTML element on submission", () => {
             // Arrange
             nodes.donationAmountInputNode.value = "Zach's cat$ @re cut3!";
 
@@ -374,7 +386,7 @@ describe("Donation Form Integration Tets", () => {
             expect(errorMessageSpan.textContent).toBe("Please provide a valid donation amount!");
         });
 
-        test("with invalid donation date displays corresponding error message in HTML element", () => {
+        test("with invalid donation date displays corresponding error message in HTML element on submission", () => {
             // Arrange
             nodes.donationDateInputNode.value = "";
 
@@ -386,7 +398,7 @@ describe("Donation Form Integration Tets", () => {
             expect(errorMessageSpan.textContent).toBe("Please select a date of when the donation was made!");
         });
 
-        test("with invalid donation comment displays corresponding error message in HTML element", () => {
+        test("with invalid donation comment displays corresponding error message in HTML element on submission", () => {
             // Arrange
             nodes.donationCommentInputNode.value = "";
 
@@ -398,6 +410,7 @@ describe("Donation Form Integration Tets", () => {
             expect(errorMessageSpan.textContent).toBe("Please provide a donation comment!");
         });
     });
+
 
 
 
