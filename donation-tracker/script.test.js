@@ -351,22 +351,21 @@ describe("Data Processing Tests and Donation Form Integration", () => {
         });
     });
 
-    // Test validateDonationForm function
-    describe("handleDonationFormSubmission", () => {
+    // Test init() function
+    describe("init() function", () => {
         test("with invalid charity name displays corresponding error message in HTML element on submission", () => {
             // Arrange
             nodes.charityNameInputNode.value = "Zach's cat$ @re cut3!";
-            initDomNodes();
-            init();
 
             // Act
             // CITATION: https://developer.mozilla.org/en-US/docs/Web/API/Document/createEvent
             // CITATION: https://developer.mozilla.org/en-US/docs/Web/API/Event/initEvent
             // both are deprecated, but forced to use it as `new SubmitEvent` wouldn't work
-            // and kept on giving me errors for hours....... this works for now!
+            // and kept on giving me errors for hours....... however this works for now!
             // CITATION OF SubmitEvent: https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent/SubmitEvent
             const submitEvent = global.document.createEvent("Event");
             submitEvent.initEvent("submit");
+            init();
             nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
 
             // Assert
@@ -379,7 +378,10 @@ describe("Data Processing Tests and Donation Form Integration", () => {
             nodes.donationAmountInputNode.value = "Zach's cat$ @re cut3!";
 
             // Act
-            validateDonationForm(nodes);
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
 
             // Assert
             const errorMessageSpan = global.document.querySelector(".input-error");
@@ -391,7 +393,10 @@ describe("Data Processing Tests and Donation Form Integration", () => {
             nodes.donationDateInputNode.value = "";
 
             // Act
-            validateDonationForm(nodes);
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
 
             // Assert
             const errorMessageSpan = global.document.querySelector(".input-error");
@@ -403,7 +408,10 @@ describe("Data Processing Tests and Donation Form Integration", () => {
             nodes.donationCommentInputNode.value = "";
 
             // Act
-            validateDonationForm(nodes);
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
 
             // Assert
             const errorMessageSpan = global.document.querySelector(".input-error");
