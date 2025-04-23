@@ -251,6 +251,12 @@ function escapeHTML(input) {
 }
 
 // STAGE 2 FUNCTIONS
+
+// Load donations from localStorage
+function loadDonationsFromStorage(nodes) {
+    renderDonationTable(nodes);
+}
+
 // Add a new donation to localStorage
 function addDonationToStorage(donation) {
     try {
@@ -272,7 +278,35 @@ function getDonationsFromStorage() {
     }
 }
 
-
+// Render the donations table
+function renderDonationTable(nodes) {
+    const donations = getDonationsFromStorage();
+    const tableBody = nodes.donationsTableBodyNode;
+    
+    // Clear existing table rows
+    tableBody.innerHTML = "";
+    
+    // Add a row for each donation
+    donations.forEach(donation => {
+        const row = document.createElement("tr");
+        
+        // Format the date for better readability
+        // CITATION: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+        const formattedDate = new Date(donation.donationDate).toLocaleDateString();
+        
+        row.innerHTML = `
+            <td>${donation.charityName}</td>
+            <td>${donation.donationAmount}</td>
+            <td>${formattedDate}</td>
+            <td>${donation.donorComment}</td>
+            <td>
+                <button class="delete-button" data-id="${donation.id}">Delete</button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
 
 // If our runtime environment is the browser, incoke the event listener/page load
 if (typeof window !== "undefined") {
