@@ -32,6 +32,7 @@ function init() {
     // Stage 2 stuff
     // Load donations from localStorage
     loadDonationsFromStorage(nodes);
+    updateDonationSummary(nodes);
 }
 
 // Form submission handler
@@ -50,6 +51,8 @@ function handleDonationFormSubmission(nodes, tempData) {
         addDonationToStorage(tempData);
         // Update the table with the new donation
         renderDonationTable(nodes);
+        // Update the summary section
+        updateDonationSummary(nodes);
 
         // Set a timeout just to see the console.log before page refreshes
         // for testing purposes 
@@ -76,8 +79,14 @@ function collectTemporaryDonationData(nodes) {
     const donationDateValue = nodes.donationDateInputNode.value;
     const donationCommentValue = escapeHTML(nodes.donationCommentInputNode.value.trim());
 
+    // Part 2 stuff for deleting, utilizes an ID for a donation (basically just a timestamp)
+    // CITATION: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toString
+    const donationId = Date.now().toString();
+
+
     // This is grabbing the global variable invoked at topp and assigning new values.
     temporaryDonationData = {
+        id: donationId,
         charityName: charityNameValue,
         donationAmount: donationAmountValue,
         donationDate: donationDateValue,
@@ -324,10 +333,10 @@ function renderDonationTable(nodes) {
         });
 
         // Add event listeners to delete buttons
-        const deleteButtons = document.querySelectorAll('.delete-button');
+        const deleteButtons = document.querySelectorAll(".delete-button");
         deleteButtons.forEach(button => {
             button.addEventListener("click", () => {
-                const donationId = button.getAttribute('data-id');
+                const donationId = button.getAttribute("data-id");
                 deleteDonation(donationId, nodes);
         });
     });
@@ -367,7 +376,7 @@ function updateDonationSummary(nodes) {
 
 // Delete a donation from localStorage UTILIZING an ID
 function deleteDonation(donationId, nodes) {
-    try{
+    try {
         const donations = getDonationsFromStorage();
         // CITATION (filter()): https://www.w3schools.com/jsref/jsref_filter.asp
         const updatedDonations = donations.filter(donation => donation.id !== donationId);
