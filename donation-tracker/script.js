@@ -44,7 +44,7 @@ function handleDonationFormSubmission(nodes, tempData) {
             nodes.donationTrackerFormNode.submit();
         }, 15000);
         */
-        nodes.donationTrackerFormNode.submit();
+        //nodes.donationTrackerFormNode.submit();
     } else {
         console.warn("Invalid inputs.");
     }
