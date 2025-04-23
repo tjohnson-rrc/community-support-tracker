@@ -1,0 +1,326 @@
+/* FOR USAGE OF :ROOT, 
+    CITATION: https://developer.mozilla.org/en-US/docs/Web/CSS/:root
+   CITATION: https://www.w3schools.com/cssref/sel_root.php
+   tried to base it off of the style guide as much as i can
+*/
+:root {
+    --primary-dark: #22223B;
+    --primary: #4A4E69;
+    --secondary: #9A8C98;
+    --accent: #C9ADA7;
+    --light: #F2E9E4;
+    --error: rgb(171, 32, 32);
+    --success: #28a745;
+    --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+  
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, 'Geneva', Verdana, sans-serif;
+    background-color: var(--primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    color: #333;
+    font-size: 16px;
+}
+  
+/* ADDING THIS FOR ALL THE ACCESSIBILITY FOCUSS STYLES */
+:focus {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+  
+/* KEYBOARD NAVIGATION FOR ACCESSIBILITY  */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-dark);
+    color: var(--light);
+    padding: 8px;
+    z-index: 100;
+    transition: top 0.3s;
+}
+  
+.skip-link:focus {
+    top: 0;
+}
+  
+header {
+    width: 100%;
+    background-color: var(--light);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.nav-bar {
+    margin-top: 10px;
+    width: 100%;
+}
+  
+@media (min-width: 768px) {
+    header {
+        padding: 25px 20px;
+        justify-content: space-between;
+    }
+    
+    .nav-bar {
+      margin-top: 0;
+      width: auto;
+    }
+  }
+  
+.nav-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    justify-content: flex-start;
+}
+
+@media (min-width: 768px) {
+    .nav-links {
+        gap: 20px;
+        justify-content: flex-end;
+    }
+}
+
+.nav-links a {
+    color: var(--primary);
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 4px;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+    color: var(--primary-dark);
+    text-decoration: underline;
+    background-color: rgba(201, 173, 167, 0.2);
+}
+
+footer {
+    width: 100%;
+    background-color: var(--primary-dark);
+    padding: 18px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--light);
+    font-size: 14px;
+    margin-top: auto;
+}
+
+main {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+form {
+    background-color: #F2E9E4;
+    margin: 40px auto;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+@media (min-width: 768px) {
+    form {
+        margin: 90px auto 85px auto;
+        padding: 2rem;
+    }
+}
+
+legend {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    width: 100%;
+}
+
+.input-container {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.input-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.input-container input,
+.input-container select,
+.input-container textarea {
+width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+.input-container input:focus,
+.input-container select:focus,
+.input-container textarea:focus {
+    border-color: var(--primary);
+}
+
+.input-container textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.input-error {
+    height: auto;
+    color: var(--error);
+    display: block;
+    font-size: 0.875rem;
+    padding: 0.3em 0;
+    font-weight: 600;
+}
+
+/* the 2 kinds of buttons*/
+button,
+input[type="submit"] {
+    padding: 0.75rem 2rem;
+    background-color: var(--primary-dark);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--transition);
+    align-self: center;
+}
+
+button:hover,
+input[type="submit"]:hover,
+button:focus,
+input[type="submit"]:focus {
+    background-color: #7d0b5f;
+    transform: scale(1.05);
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#donations-table-container {
+    margin: 40px auto;
+    background-color: #F2E9E4;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+    #donations-table-container {
+        padding: 1.5rem;
+    }
+}
+
+#donations-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px;
+}
+
+#donations-table caption {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+#donations-table th,
+#donations-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#donations-table th {
+    background-color: #f8f8f8;
+    font-weight: 600;
+    color: var(--primary-dark);
+    position: sticky;
+    top: 0;
+}
+
+#donations-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+#donations-table tr:focus-within {
+    background-color: rgba(201, 173, 167, 0.1);
+}
+
+.delete-button {
+    background-color: var(--error);
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-button:hover,
+.delete-button:focus {
+    background-color: #c9302c;
+}
+
+.summary-section {
+    background-color: #F2E9E4;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin: 20px auto 40px;
+    max-width: 600px;
+}
+
+.summary-section h2 {
+    margin-top: 0;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+}
+

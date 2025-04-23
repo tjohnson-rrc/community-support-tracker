@@ -12,6 +12,7 @@
 
 #F2E9E4
 
+rgb(171, 32, 32) *(For error messages and deletion buttons)*
 
 # Fonts
 
