@@ -26,22 +26,25 @@ function init() {
 }
 
 // Form submission handler
-function handleDonationFormSubmission(nodes) {
+function handleDonationFormSubmission(nodes, tempData) {
     const inputsAreValid = validateDonationForm(nodes);
 
     if (inputsAreValid) {
 
         // FUNCTION THAT STORES TEMPORARY DATA 
-        collectTemporaryDonationData(nodes);
+        tempData = collectTemporaryDonationData(nodes);
         // Displays the temporary donation data when user submits  
         console.log("Donation submitted: ", temporaryDonationData);
 
         // Set a timeout just to see the console.log before page refreshes
         // for testing purposes 
+        
+        /* COMMENTED OUT FOR TESTING
         setTimeout(() => {
             nodes.donationTrackerFormNode.submit();
         }, 15000);
-
+        */
+        //nodes.donationTrackerFormNode.submit();
     } else {
         console.warn("Invalid inputs.");
     }
@@ -62,6 +65,7 @@ function collectTemporaryDonationData(nodes) {
         donorComment: donationCommentValue
     };
 
+    setTemporaryDonationData(temporaryDonationData);
     return temporaryDonationData;
 }
 
@@ -225,6 +229,14 @@ function displayInputError(inputElement, message) {
     inputParentNode.appendChild(errorDisplayNode);
 }
 
+function setTemporaryDonationData(data) {
+    temporaryDonationData = data;
+}
+
+function getTemporaryDonationData() {
+    return temporaryDonationData;
+}
+
 function escapeHTML(input) {
     return input
         .replace(/&/g, "&amp;")
@@ -251,6 +263,8 @@ if (typeof window !== "undefined") {
         escapeHTML,
         handleDonationFormSubmission,
         initDomNodes,
-        init
+        init,
+        getTemporaryDonationData,
+        setTemporaryDonationData
     };
 }

@@ -1,12 +1,16 @@
 const {
     collectTemporaryDonationData,
-        validateDonationForm,
-        validateCharityName,
-        validateDonationAmount,
-        validateDonationDate,
-        validateDonationComment,
-        displayInputError,
-        escapeHTML
+    validateDonationForm,
+    validateCharityName,
+    validateDonationAmount,
+    validateDonationDate,
+    validateDonationComment,
+    handleDonationFormSubmission,
+    init,
+    initDomNodes,
+    displayInputError,
+    getTemporaryDonationData,
+    setTemporaryDonationData
 } = require("./script");
 
 const { JSDOM } = require("jsdom");
@@ -258,3 +262,182 @@ describe("Donation Form Validation Functions", () => {
     });
 
 });
+
+describe("Data Processing Tests and Donation Form Integration", () => {
+
+    let testDom;
+    let nodes;
+
+    /* CITATION: https://jestjs.io/docs/api#beforeeachfn-timeout 
+    beforeEach is exactly what the name implies, it creates a new DOM
+    environment BEFORE EACH test. 
+    */
+    beforeEach(() => {
+        // Just a basic HTML without semantics; just for testing environment. :)
+        testDom = new JSDOM(`
+            <!DOCTYPE html>
+            <html>
+                <body>
+                    <form id="donation-tracker-form">
+                        <div class="input-container">
+                            <input type="text" id="field_charity-name" name="charityName" value="Red River College">
+                        </div>
+                        <div class="input-container">
+                            <input type="text" id="field_donation-amount" name="donationAmount" value="100">
+                        </div>
+                        <div class="input-container">
+                            <input type="date" id="field_donation-date" name="donationDate" value="2023-04-15">
+                        </div>
+                        <div class="input-container">
+                            <textarea id="field_donor-comment" name="donorComment">Ozzy is cute!</textarea>
+                        </div>
+                        <div class="button">
+                            <input type="submit" class="submitButton" value="Submit">
+                        </div>
+                    </form>
+                </body>
+            </html>
+            `);
+
+        // variables
+        global.document = testDom.window.document;
+        global.window = testDom.window;
+
+        // Initialize DOM nodes for testing
+        nodes = {
+            donationTrackerFormNode: global.document.querySelector("#donation-tracker-form"),
+            charityNameInputNode: global.document.querySelector("#field_charity-name"),
+            donationAmountInputNode: global.document.querySelector("#field_donation-amount"),
+            donationDateInputNode: global.document.querySelector("#field_donation-date"),
+            donationCommentInputNode: global.document.querySelector("#field_donor-comment")
+        };
+
+        // Reset temporaryDonationData for each test to run smoothly.
+        global.temporaryDonationData = {};
+    });
+
+    // Test collectTemporaryDonationData function
+    describe("collectTemporaryDonationData", () => {
+        test("properly collects data with the right charity name", () => {
+            // Act
+            const result = collectTemporaryDonationData(nodes);
+
+            // Assert
+            expect(result.charityName).toBe("Red River College");
+        });
+
+        test("properly collects data with the right donation amount", () => {
+            // Act
+            const result = collectTemporaryDonationData(nodes);
+
+            // Assert
+            expect(result.donationAmount).toBe("100");
+        });
+
+        test("properly collects data with the right donation date", () => {
+            // Act
+            const result = collectTemporaryDonationData(nodes);
+
+            // Assert
+            expect(result.donationDate).toBe("2023-04-15");
+        });
+
+        test("properly collects data with a valid donation comment", () => {
+            // Act
+            const result = collectTemporaryDonationData(nodes);
+
+            // Assert
+            expect(result.donorComment).toBe("Ozzy is cute!");
+        });
+    });
+
+    // Test init() function
+    describe("init() function", () => {
+        test("with invalid charity name displays corresponding error message in HTML element on submission", () => {
+            // Arrange
+            nodes.charityNameInputNode.value = "Zach's cat$ @re cut3!";
+
+            // Act
+            // CITATION: https://developer.mozilla.org/en-US/docs/Web/API/Document/createEvent
+            // CITATION: https://developer.mozilla.org/en-US/docs/Web/API/Event/initEvent
+            // both are deprecated, but forced to use it as `new SubmitEvent` wouldn't work
+            // and kept on giving me errors for hours....... however this works for now!
+            // CITATION OF SubmitEvent: https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent/SubmitEvent
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
+
+            // Assert
+            const errorMessageSpan = global.document.querySelector(".input-error");
+            expect(errorMessageSpan.textContent).toBe("Please provide a valid charity name that's 4 or more characters!");
+        });
+
+        test("with invalid donation amount displays corresponding error message in HTML element on submission", () => {
+            // Arrange
+            nodes.donationAmountInputNode.value = "Zach's cat$ @re cut3!";
+
+            // Act
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
+
+            // Assert
+            const errorMessageSpan = global.document.querySelector(".input-error");
+            expect(errorMessageSpan.textContent).toBe("Please provide a valid donation amount!");
+        });
+
+        test("with invalid donation date displays corresponding error message in HTML element on submission", () => {
+            // Arrange
+            nodes.donationDateInputNode.value = "";
+
+            // Act
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
+
+            // Assert
+            const errorMessageSpan = global.document.querySelector(".input-error");
+            expect(errorMessageSpan.textContent).toBe("Please select a date of when the donation was made!");
+        });
+
+        test("with invalid donation comment displays corresponding error message in HTML element on submission", () => {
+            // Arrange
+            nodes.donationCommentInputNode.value = "";
+
+            // Act
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
+
+            // Assert
+            const errorMessageSpan = global.document.querySelector(".input-error");
+            expect(errorMessageSpan.textContent).toBe("Please provide a donation comment!");
+        });
+
+        test("form submission with valid data updates temporaryDonationData correctly.", () => {
+            // Arrange
+            const expectedData = {
+                charityName: "Red River College",
+                donationAmount: "100",
+                donationDate: "2023-04-15",
+                donorComment: "Ozzy is cute!"
+            }
+            
+            // Act
+            const submitEvent = global.document.createEvent("Event");
+            submitEvent.initEvent("submit");
+            init();
+            nodes.donationTrackerFormNode.dispatchEvent(submitEvent);
+            const actualData = getTemporaryDonationData();
+
+
+            // Assert
+            expect(actualData).toEqual(expectedData);
+        });
+    });
+
+})
