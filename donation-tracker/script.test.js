@@ -496,4 +496,40 @@ describe("Data Processing Tests and Donation Form Integration", () => {
         });
     });
 
+    describe("Stage 2: Donation Storage and Display", () => {
+    
+        describe("renderDonationTable", () => {
+            test("creates table rows for each donation", () => {
+                // Arrange
+                const donations = [
+                  { id: "123", charityName: "Zach Montreuil", donationAmount: "69.69", donationDate: "2003-04-11", donorComment: "Project is too much :(" },
+                  { id: "456", charityName: "Zach Efron", donationAmount: "169", donationDate: "2023-04-12", donorComment: "testest" }
+                ];
+                localStorage.setItem("donationRecords", JSON.stringify(donations));
+                
+                // Act
+                renderDonationTable(nodes);
+                
+                // Assert
+                // Not gonna check every content of each row.
+                const tableRows = nodes.donationsTableBodyNode.querySelectorAll("tr");
+                expect(tableRows).toHaveLength(2);
+                
+                // Check content of first row
+                const firstRowCells = tableRows[0].querySelectorAll("td");
+                expect(firstRowCells[0].textContent).toBe("Zach Montreuil");
+                expect(firstRowCells[1].textContent).toBe("69.69");
+                
+                // Check that delete buttons were created
+                const deleteButtons = nodes.donationsTableBodyNode.querySelectorAll(".delete-button");
+                expect(deleteButtons).toHaveLength(2);
+                expect(deleteButtons[0].getAttribute("data-id")).toBe("123");
+            });
+        })
+    
+
+
+    
+    });
+
 })
