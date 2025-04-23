@@ -10,8 +10,46 @@ const {
     initDomNodes,
     displayInputError,
     getTemporaryDonationData,
-    setTemporaryDonationData
+    setTemporaryDonationData,
+    // stage 2 stuff
+    getDonationsFromStorage,
+    addDonationToStorage,
+    deleteDonation,
+    calculateTotalDonationAmount,
+    updateDonationSummary,
+    renderDonationTable,
+    loadDonationsFromStorage
 } = require("./script");
+
+// CITATION: https://stackoverflow.com/questions/32911630/how-do-i-deal-with-localstorage-in-jest-tests
+if (typeof window !== "undefined") {
+    // We're in a browser environment, use native localStorage
+  } else {
+    // We're in Node.js, create a localStorage polyfill
+    class LocalStorageMock {
+      constructor() {
+        this.store = {};
+      }
+      
+      getItem(key) {
+        return this.store[key] || null;
+      }
+      
+      setItem(key, value) {
+        this.store[key] = String(value);
+      }
+      
+      removeItem(key) {
+        delete this.store[key];
+      }
+      
+      clear() {
+        this.store = {};
+      }
+    }
+    
+    global.localStorage = new LocalStorageMock();
+}
 
 const { JSDOM } = require("jsdom");
 
@@ -295,6 +333,10 @@ describe("Data Processing Tests and Donation Form Integration", () => {
                             <input type="submit" class="submitButton" value="Submit">
                         </div>
                     </form>
+                    <table id="donations-table">
+                        <tbody id="donations-table-body"></tbody>
+                    </table>
+                <span id="total-donation-amount">0.00</span>
                 </body>
             </html>
             `);
@@ -303,17 +345,28 @@ describe("Data Processing Tests and Donation Form Integration", () => {
         global.document = testDom.window.document;
         global.window = testDom.window;
 
+        // Make sure localStorage is available for stage 2 and the init tests in stage 1
+        if (!global.localStorage) {
+            global.localStorage = new LocalStorageMock();
+        }
+
         // Initialize DOM nodes for testing
         nodes = {
             donationTrackerFormNode: global.document.querySelector("#donation-tracker-form"),
             charityNameInputNode: global.document.querySelector("#field_charity-name"),
             donationAmountInputNode: global.document.querySelector("#field_donation-amount"),
             donationDateInputNode: global.document.querySelector("#field_donation-date"),
-            donationCommentInputNode: global.document.querySelector("#field_donor-comment")
+            donationCommentInputNode: global.document.querySelector("#field_donor-comment"),
+            // Stage 2 nodes
+            donationsTableBodyNode: global.document.querySelector("#donations-table-body"),
+            totalDonationAmountNode: global.document.querySelector("#total-donation-amount")
         };
 
         // Reset temporaryDonationData for each test to run smoothly.
         global.temporaryDonationData = {};
+
+        // Clear localStorage
+        localStorage.clear();
     });
 
     // Test collectTemporaryDonationData function
@@ -436,8 +489,151 @@ describe("Data Processing Tests and Donation Form Integration", () => {
 
 
             // Assert
-            expect(actualData).toEqual(expectedData);
+            expect(actualData.charityName).toEqual(expectedData.charityName);
+            expect(actualData.donationAmount).toEqual(expectedData.donationAmount);
+            expect(actualData.donationDate).toEqual(expectedData.donationDate);
+            expect(actualData.donorComment).toEqual(expectedData.donorComment);
         });
+    });
+
+    describe("Stage 2: Donation Storage and Display", () => {
+    
+        describe("renderDonationTable", () => {
+            test("creates table rows for each donation", () => {
+                // Arrange
+                const donations = [
+                  { id: "123", charityName: "Zach Montreuil", donationAmount: "69.69", donationDate: "2003-04-11", donorComment: "Project is too much :(" },
+                  { id: "456", charityName: "Zach Efron", donationAmount: "169", donationDate: "2023-04-12", donorComment: "testest" }
+                ];
+                localStorage.setItem("donationRecords", JSON.stringify(donations));
+                
+                // Act
+                renderDonationTable(nodes);
+                
+                // Assert
+                // Not gonna check every content of each row.
+                const tableRows = nodes.donationsTableBodyNode.querySelectorAll("tr");
+                expect(tableRows).toHaveLength(2);
+                
+                // Check content of first row
+                const firstRowCells = tableRows[0].querySelectorAll("td");
+                expect(firstRowCells[0].textContent).toBe("Zach Montreuil");
+                expect(firstRowCells[1].textContent).toBe("69.69");
+                
+                // Check that delete buttons were created
+                const deleteButtons = nodes.donationsTableBodyNode.querySelectorAll(".delete-button");
+                expect(deleteButtons).toHaveLength(2);
+                expect(deleteButtons[0].getAttribute("data-id")).toBe("123");
+            });
+        })
+
+        describe("handleDonationFormSubmission", () => {
+            test("adds new donation to localStorage and updates the donation table", () => {
+                // Arrange
+                nodes.charityNameInputNode.value = "Zachie Mont";
+                nodes.donationAmountInputNode.value = "123";
+                nodes.donationDateInputNode.value = "2023-05-01";
+                nodes.donationCommentInputNode.value = "test comment";
+
+                // Act
+                handleDonationFormSubmission(nodes);
+
+                // Assert
+
+                // localStorage
+                const storedDonations = JSON.parse(localStorage.getItem("donationRecords"));
+                expect(storedDonations).toHaveLength(1);
+                expect(storedDonations[0].charityName).toBe("Zachie Mont");
+
+                // Table DOM
+                const tableRows = nodes.donationsTableBodyNode.querySelectorAll("tr");
+                expect(tableRows).toHaveLength(1);
+                const firstRowCells = tableRows[0].querySelectorAll("td");
+                expect(firstRowCells[0].textContent).toBe("Zachie Mont");
+                expect(firstRowCells[1].textContent).toBe("123");
+            });
+        })
+        
+        describe("calculateTotalDonationAmount", () => {
+            test("correctly returns the total donation amount from multiple donations", () => {
+                // Arrange
+                const donations = [
+                    { id: "123", charityName: "Taylor", donationAmount: "50", donationDate: "2023-01-01", donorComment: "Test 1" },
+                    { id: "456", charityName: "Edraque", donationAmount: "100", donationDate: "2023-02-01", donorComment: "Test 2" },
+                    { id: "789", charityName: "Seb", donationAmount: "25.50", donationDate: "2023-03-01", donorComment: "Test 3" }
+                  ];
+                localStorage.setItem("donationRecords", JSON.stringify(donations));
+
+                // Act
+                const total = calculateTotalDonationAmount();
+
+                // Assert
+                expect(total).toBe(175.5);
+            });
+        })
+
+        describe("deleteDonation", () => {
+            beforeEach(() => {
+                // Set up common test data only for delete donations testss
+                const donations = [
+                  { id: "123", charityName: "Zach", donationAmount: "50", donationDate: "2023-01-01", donorComment: "too much" },
+                  { id: "456", charityName: "Edraque", donationAmount: "100", donationDate: "2023-02-01", donorComment: "to doooo" }
+                ];
+                localStorage.setItem("donationRecords", JSON.stringify(donations));
+                
+                // Render the table with both donations
+                renderDonationTable(nodes);
+                updateDonationSummary(nodes);
+              });
+
+            test("removes donation with matching ID from localStorage", () => {
+                // Act
+                deleteDonation("123", nodes);
+                
+                // Assert - check localStorage
+                const storedDonations = JSON.parse(localStorage.getItem("donationRecords"));
+                expect(storedDonations).toHaveLength(1);
+                expect(storedDonations[0].id).toBe("456");
+            });
+
+            test("removes donation row from table when deleted", () => {
+                // Arrange
+                // this verifiess initial state of the tablle
+                let tableRows = nodes.donationsTableBodyNode.querySelectorAll("tr");
+                expect(tableRows).toHaveLength(2);
+                
+                // Act
+                deleteDonation("123", nodes);
+                
+                // Assert - check that the table was updated
+                tableRows = nodes.donationsTableBodyNode.querySelectorAll("tr");
+                expect(tableRows).toHaveLength(1);
+                
+                // Check that the remaining row contains the expected donation data
+                const rowCells = tableRows[0].querySelectorAll("td");
+                expect(rowCells[0].textContent).toBe("Edraque");
+                expect(rowCells[1].textContent).toBe("100");
+                
+                // Check that the delete button for the remaining row has the correct ID to REALLY ensure it's correct.
+                const deleteButton = tableRows[0].querySelector(".delete-button");
+                expect(deleteButton.getAttribute("data-id")).toBe("456");
+            });
+
+            test("updates total donation amount when a record is deleted", () => {
+                // Arrange
+                // this just basically verifies the initial state of the donation total/su m; should be 150 :)
+                expect(nodes.totalDonationAmountNode.textContent).toBe("150.00");
+
+                // Act
+                deleteDonation("123", nodes);
+
+                // Assert
+                expect(nodes.totalDonationAmountNode.textContent).toBe("100.00");
+            });
+        })
+
+
+    
     });
 
 })

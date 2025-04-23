@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/templates/template-styles.css" rel="stylesheet"/>
+    <link href="./donation-tracker-styles.css" rel="stylesheet"/>
     <title>Community Support Tracker</title>
 </head>
 <body>
     <!-- Header and Nav from template -->
-    <header class="header">Community Support Tracker
+    <header class="header">
+        <h1>Community Support Tracker</h1>
         <nav class="nav-bar" id="field_nav-bar">
             <ul class="nav-links">
-                <li><a href="./index.html">Home</a></li>
-                <li><a href="./event-signup/event-signup.html">Event Signup Tracker</a></li>
-                <li><a href="./donation-tracker/index.html">Donation Tracker</a></li>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../event-signup/event-signup.html">Event Signup Tracker</a></li>
+                <li><a href="./index.html">Donation Tracker</a></li>
                 <li><a href="./volunteer-hours-tracker/index.html">Volunteer Hours Tracker</a></li>
             </ul>
         </nav>  
@@ -53,6 +54,30 @@
             </div>
 
         </form>
+
+        <section id="donations-table-container">
+            <h2>Donation Records</h2>
+            <table id="donations-table">
+                <thead>
+                    <tr>
+                        <th>Charity Name</th>
+                        <th>Donation Amount</th>
+                        <th>Date</th>
+                        <th>Donor's comment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="donations-table-body">
+                    <!-- Donation records will be inserted here -->
+                </tbody>
+            </table>
+        </section>
+
+        <section class="summary-section" id="donation-summary">
+            <h2>Donation Summary</h2>
+            <p>Total Amount Donated: $<span id="total-donation-amount">0.00</span></p>
+        </section>
+
     </main>
     <!-- Footer from template -->
     <footer class="footer"> © 2025 PIXELL River Financial. All rights reserved.</footer>

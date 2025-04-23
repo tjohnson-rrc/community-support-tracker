@@ -1,5 +1,7 @@
 // NODES AND VARIABLES
 let temporaryDonationData = {};
+// Decided to have a constant for localStorage for clarity!!
+const DONATIONS_STORAGE_KEY = "donationRecords";
 
 // Initialize the DOM nodes after the document is loaded (invoked at the bottom)
 function initDomNodes() {
@@ -9,6 +11,9 @@ function initDomNodes() {
         donationAmountInputNode: document.querySelector("#field_donation-amount"),
         donationDateInputNode: document.querySelector("#field_donation-date"),
         donationCommentInputNode: document.querySelector("#field_donor-comment"),
+        // stage 2
+        donationsTableBodyNode: document.querySelector("#donations-table-body"),
+        totalDonationAmountNode: document.querySelector("#total-donation-amount")
     };
 }
 
@@ -23,6 +28,11 @@ function init() {
             handleDonationFormSubmission(nodes);
         });
     }
+
+    // Stage 2 stuff
+    // Load donations from localStorage
+    loadDonationsFromStorage(nodes);
+    updateDonationSummary(nodes);
 }
 
 // Form submission handler
@@ -36,15 +46,27 @@ function handleDonationFormSubmission(nodes, tempData) {
         // Displays the temporary donation data when user submits  
         console.log("Donation submitted: ", temporaryDonationData);
 
+        /* Stage 2 stuff !!!! */
+        // Add donation to localStorage
+        addDonationToStorage(tempData);
+        // Update the table with the new donation
+        renderDonationTable(nodes);
+        // Update the summary section
+        updateDonationSummary(nodes);
+
         // Set a timeout just to see the console.log before page refreshes
         // for testing purposes 
-        
-        /* COMMENTED OUT FOR TESTING
+        /* COMMENTED OUT FOR TESTING IN BROWSER
         setTimeout(() => {
             nodes.donationTrackerFormNode.submit();
         }, 15000);
         */
-        //nodes.donationTrackerFormNode.submit();
+      
+        // nodes.donationTrackerFormNode.submit();
+
+        /* FOR STAGE 2 JEST ENVIRONMENT AND BROWSER TESTING, RESET WILL BE USED INSTEAD OF SUBMIT */
+        // Also resets the form fields
+        nodes.donationTrackerFormNode.reset();
     } else {
         console.warn("Invalid inputs.");
     }
@@ -57,8 +79,14 @@ function collectTemporaryDonationData(nodes) {
     const donationDateValue = nodes.donationDateInputNode.value;
     const donationCommentValue = escapeHTML(nodes.donationCommentInputNode.value.trim());
 
+    // Part 2 stuff for deleting, utilizes an ID for a donation (basically just a timestamp)
+    // CITATION: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toString
+    const donationId = Date.now().toString();
+
+
     // This is grabbing the global variable invoked at topp and assigning new values.
     temporaryDonationData = {
+        id: donationId,
         charityName: charityNameValue,
         donationAmount: donationAmountValue,
         donationDate: donationDateValue,
@@ -246,6 +274,122 @@ function escapeHTML(input) {
         .replace(/'/g, "&#039;");
 }
 
+// STAGE 2 FUNCTIONS
+
+// Load donations from localStorage
+function loadDonationsFromStorage(nodes) {
+    renderDonationTable(nodes);
+}
+
+// Add a new donation to localStorage
+function addDonationToStorage(donation) {
+    try {
+        const existingDonations = getDonationsFromStorage();
+        existingDonations.push(donation);
+        localStorage.setItem(DONATIONS_STORAGE_KEY, JSON.stringify(existingDonations));
+    } catch (error) {
+        throw new Error("Unable to add donations: " + error);
+    }
+}
+
+// Get all donations from localStorage
+function getDonationsFromStorage() {
+    try{
+        const donationsString = localStorage.getItem(DONATIONS_STORAGE_KEY);
+        return donationsString ? JSON.parse(donationsString) : [];
+    } catch (error) {
+        throw new Error("Unable to get donations: " + error);
+    }
+}
+
+// Render the donations table
+function renderDonationTable(nodes) {
+    try {
+        const donations = getDonationsFromStorage();
+        const tableBody = nodes.donationsTableBodyNode;
+        
+        // Clear existing table rows
+        tableBody.innerHTML = "";
+        
+        // Add a row for each donation
+        donations.forEach(donation => {
+            const row = document.createElement("tr");
+            
+            // Format the date for better readability
+            // CITATION: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+            const formattedDate = new Date(donation.donationDate).toLocaleDateString();
+            
+            row.innerHTML = `
+                <td>${donation.charityName}</td>
+                <td>${donation.donationAmount}</td>
+                <td>${formattedDate}</td>
+                <td>${donation.donorComment}</td>
+                <td>
+                    <button class="delete-button" data-id="${donation.id}">Delete</button>
+                </td>
+            `;
+            
+            tableBody.appendChild(row);
+        });
+
+        // Add event listeners to delete buttons
+        const deleteButtons = document.querySelectorAll(".delete-button");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const donationId = button.getAttribute("data-id");
+                deleteDonation(donationId, nodes);
+        });
+    });
+    } catch (error) {
+        throw new Error("Failed to display donations: " + error);
+    }
+}
+
+// Calculate the total donation amount
+function calculateTotalDonationAmount() {
+    try {
+        const donations = getDonationsFromStorage();
+        // CITATION (reduce()): https://www.w3schools.com/jsref/jsref_reduce.asp
+        // CITATION (parseFloat()): https://www.w3schools.com/jsref/jsref_parsefloat.asp
+        // CITATION (isNaN()): https://www.w3schools.com/jsref/jsref_isnan.asp
+        // utilized these because the regex I used for validations are just from regex101/forum,
+        // so I want to ensure it's right.
+        return donations.reduce((total, donation) => {
+            const amount = parseFloat(donation.donationAmount);
+            return total + (isNaN(amount) ? 0 : amount);
+        }, 0);
+    } catch (error) {
+        throw new Error("Failed to calculate total donations: " + error);
+    }
+}
+
+// Update the summary section with the total donation amount
+function updateDonationSummary(nodes) {
+    try {
+        const totalAmount = calculateTotalDonationAmount();
+        // CITATION (toFixed): https://www.w3schools.com/jsref/jsref_tofixed.asp
+        nodes.totalDonationAmountNode.textContent = totalAmount.toFixed(2);
+    } catch (error) {
+        throw new Error("Failed to update donation summary: " + error);
+    }
+}
+
+// Delete a donation from localStorage UTILIZING an ID
+function deleteDonation(donationId, nodes) {
+    try {
+        const donations = getDonationsFromStorage();
+        // CITATION (filter()): https://www.w3schools.com/jsref/jsref_filter.asp
+        const updatedDonations = donations.filter(donation => donation.id !== donationId);
+        localStorage.setItem(DONATIONS_STORAGE_KEY, JSON.stringify(updatedDonations));
+        
+        // Updates the UI 
+        renderDonationTable(nodes);
+        updateDonationSummary(nodes);
+    } catch (error) {
+        throw new Error("Failed to delete donation record: " + error);
+    }
+}
+
 // If our runtime environment is the browser, incoke the event listener/page load
 if (typeof window !== "undefined") {
     // CITATION: https://developer.mozilla.org/en-US/docs/Web/API/Window
@@ -265,6 +409,14 @@ if (typeof window !== "undefined") {
         initDomNodes,
         init,
         getTemporaryDonationData,
-        setTemporaryDonationData
+        setTemporaryDonationData,
+        // Stage 2 functions
+        getDonationsFromStorage,
+        addDonationToStorage,
+        deleteDonation,
+        calculateTotalDonationAmount,
+        updateDonationSummary,
+        renderDonationTable,
+        loadDonationsFromStorage,
     };
 }
