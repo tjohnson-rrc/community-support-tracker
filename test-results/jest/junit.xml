@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="21" failures="0" errors="0" time="2.01">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2025-04-23T16:31:43" time="0.765" tests="1">
+    <testcase classname=" addNumbers with correct arguments returns a sum" name=" addNumbers with correct arguments returns a sum" time="0.011">
+    </testcase>
+  </testsuite>
+  <testsuite name="Donation Form Validation Functions" errors="0" failures="0" skipped="0" timestamp="2025-04-23T16:31:43" time="1.66" tests="20">
+    <testcase classname="Donation Form Validation Functions validateCharityName valid charity name returns isValid true" name="Donation Form Validation Functions validateCharityName valid charity name returns isValid true" time="0.006">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateCharityName invalid charity name contains appropriate error message" name="Donation Form Validation Functions validateCharityName invalid charity name contains appropriate error message" time="0.001">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateCharityName empty charity name returns isValid false" name="Donation Form Validation Functions validateCharityName empty charity name returns isValid false" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationAmount valid simple donation amount returns isValid true" name="Donation Form Validation Functions validateDonationAmount valid simple donation amount returns isValid true" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationAmount valid decimal donation amount returns isValid true" name="Donation Form Validation Functions validateDonationAmount valid decimal donation amount returns isValid true" time="0.001">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationAmount valid dollar sign donation amount returns isValid true" name="Donation Form Validation Functions validateDonationAmount valid dollar sign donation amount returns isValid true" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationAmount valid comma separated donation amount returns isValid true" name="Donation Form Validation Functions validateDonationAmount valid comma separated donation amount returns isValid true" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationAmount invalid text donation amount returns isValid false" name="Donation Form Validation Functions validateDonationAmount invalid text donation amount returns isValid false" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationAmount invalid donation amount symbol placement returns isValid false" name="Donation Form Validation Functions validateDonationAmount invalid donation amount symbol placement returns isValid false" time="0.001">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationAmount negative donation amount returns isValid false" name="Donation Form Validation Functions validateDonationAmount negative donation amount returns isValid false" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationAmount empty donation amount returns isValid false" name="Donation Form Validation Functions validateDonationAmount empty donation amount returns isValid false" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationDate valid date (today) returns isValid true" name="Donation Form Validation Functions validateDonationDate valid date (today) returns isValid true" time="0.001">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationDate valid date (past) returns isValid true" name="Donation Form Validation Functions validateDonationDate valid date (past) returns isValid true" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationDate future date returns isValid false" name="Donation Form Validation Functions validateDonationDate future date returns isValid false" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationDate future date error message contains correct text" name="Donation Form Validation Functions validateDonationDate future date error message contains correct text" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationDate empty date returns isValid false" name="Donation Form Validation Functions validateDonationDate empty date returns isValid false" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationComment valid comment returns isValid true" name="Donation Form Validation Functions validateDonationComment valid comment returns isValid true" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationComment empty comment returns isValid false" name="Donation Form Validation Functions validateDonationComment empty comment returns isValid false" time="0.001">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationComment empty comment error message contains correct text" name="Donation Form Validation Functions validateDonationComment empty comment error message contains correct text" time="0">
+    </testcase>
+    <testcase classname="Donation Form Validation Functions validateDonationComment comment longer than 200 characters returns isValid false" name="Donation Form Validation Functions validateDonationComment comment longer than 200 characters returns isValid false" time="0.002">
+    </testcase>
+  </testsuite>
+</testsuites>
