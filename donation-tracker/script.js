@@ -61,7 +61,7 @@ function handleDonationFormSubmission(nodes, tempData) {
             nodes.donationTrackerFormNode.submit();
         }, 15000);
         */
-
+      
         // nodes.donationTrackerFormNode.submit();
 
         /* FOR STAGE 2 JEST ENVIRONMENT AND BROWSER TESTING, RESET WILL BE USED INSTEAD OF SUBMIT */

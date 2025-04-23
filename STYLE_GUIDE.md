@@ -2,29 +2,29 @@
 
 ## Colours
 
-#22223B
+#22223B *(Primary text, headers, important accents)*
 
-#4A4E69
+#4A4E69 *(Secondary text, borders, buttons)*
 
-#9A8C98
+#9A8C98 *(Subtle accents, secondary buttons)*
 
-#C9ADA7
+#C9ADA7 *(Background highlights, form elements)*
 
-#F2E9E4
+#F2E9E4 *(Header background color)*
 
 rgb(171, 32, 32) *(For error messages and deletion buttons)*
 
 # Fonts
 
-- Segoe UI
+- H1 (Main titles) and H2 (Section headers/form titles): **Segoe UI**
 
-- Tahoma
+- Body Text: **Tahoma**
   
-- Geneva
+- Footer Text: **Geneva**
 
-- Verdana
+- Input Text and error messages: **Verdana**
 
-- sans-serif
+- Fallback: **sans-serif**
 
 # Elements
 

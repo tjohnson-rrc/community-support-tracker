@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Signup</title>
+    <link rel="stylesheet" href="./event-signup-styles.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-bar" id="field_nav-bar">
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../donation-tracker/index.html">Donation Tracker</a></li>
+                <li><a href="../volunteer-hours-tracker/index.html">Volunteer Hours Tracker</a></li>
+            </ul>
+        </nav>       
+    </header>
+    
+    <form id="eventSignup">
+    <fieldset>
+        <legend><h1>Event Signup Form</h1></legend>
+
+        <div class="input-container">
+            <label for="field_event-name">Event Name</label>
+            <input type="text" name="event-name" id="field_event-name"/>
+            <div class="input-error"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="field_rep-name">Representative Name</label>
+            <input type="text" name="rep-name" id="field_rep-name"/>
+            <div class="input-error"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="field_email">Representative Email</legend>
+            <input type="text" name="email" id="field_email"/>
+            <div class="input-error"></div>
+        </div>
+
+        <div class="input-container">
+            <label for="field_role-selection">Event Role Selection</label>
+            <select name="role-selection" id="field_role-selection">
+                <option value="">Please choose the company's role for this event!</option>
+                <option value="sponsor">Sponsorship</option>
+                <option value="participant">Participant</option>
+                <option value="organizer">Organizer</option>
+                <option value="volunteer">Volunteer</option>
+            </select>
+            <div class="input-error"></div>
+        </div>
+        <button type="submit">Submit Form</button>
+    </fieldset>
+</form>
+<section id="signup-display">
+    <h2>Event Signup Sheet</h2>
+    <table id="event-table">
+        <thead>
+            <tr>
+                <th>Event Name</th>
+                <th>Representative</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</section>
+<section id="summary">
+    <h2>Event Signup Summary</h2>
+    <ul>
+        <li>Sponsors: <span id="sponsors-summary">0</span></li>
+        <li>Participants: <span id="participants-summary">0</span></li>
+        <li>Organizers: <span id="organizers-summary">0</span></li>
+        <li>Volunteers: <span id="volunteer-summary">0</span></li>
+    </ul>
+</section>
+<footer class="footer"> © 2025 PIXELL River Financial. All rights reserved.</footer>
+<script src="./event-signup.js"></script>
+</body>
+</html>
