@@ -554,7 +554,23 @@ describe("Data Processing Tests and Donation Form Integration", () => {
             });
         })
         
-    
+        describe("calculateTotalDonationAmount", () => {
+            test("correctly returns the total donation amount from multiple donations", () => {
+                // Arrange
+                const donations = [
+                    { id: "123", charityName: "Taylor", donationAmount: "50", donationDate: "2023-01-01", donorComment: "Test 1" },
+                    { id: "456", charityName: "Edraque", donationAmount: "100", donationDate: "2023-02-01", donorComment: "Test 2" },
+                    { id: "789", charityName: "Seb", donationAmount: "25.50", donationDate: "2023-03-01", donorComment: "Test 3" }
+                  ];
+                localStorage.setItem("donationRecords", JSON.stringify(donations));
+
+                // Act
+                const total = calculateTotalDonationAmount();
+
+                // Assert
+                expect(total).toBe(175.5);
+            });
+        })
 
 
     
