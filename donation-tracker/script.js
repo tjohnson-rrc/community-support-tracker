@@ -27,6 +27,10 @@ function init() {
             handleDonationFormSubmission(nodes);
         });
     }
+
+    // Stage 2 stuff
+    // Load donations from localStorage
+    loadDonationsFromStorage(nodes);
 }
 
 // Form submission handler
