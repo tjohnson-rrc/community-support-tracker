@@ -46,13 +46,39 @@
                 <option value="sponsor">Sponsorship</option>
                 <option value="participant">Participant</option>
                 <option value="organizer">Organizer</option>
-                <option value="volunteer">Volunteer Provider</option>
+                <option value="volunteer">Volunteer</option>
             </select>
             <div class="input-error"></div>
         </div>
         <button type="submit">Submit Form</button>
     </fieldset>
 </form>
+<section id="signup-display">
+    <h2>Event Signup Sheet</h2>
+    <table id="event-table">
+        <thead>
+            <tr>
+                <th>Event Name</th>
+                <th>Representative</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</section>
+<section id="summary">
+    <h2>Event Signup Summary</h2>
+    <ul>
+        <li>Sponsors: <span id="sponsors-summary">0</span></li>
+        <li>Participants: <span id="participants-summary">0</span></li>
+        <li>Organizers: <span id="organizers-summary">0</span></li>
+        <li>Volunteers: <span id="volunteer-summary">0</span></li>
+    </ul>
+</section>
 <footer class="footer"> © 2025 PIXELL River Financial. All rights reserved.</footer>
 <script src="./event-signup.js"></script>
 </body>

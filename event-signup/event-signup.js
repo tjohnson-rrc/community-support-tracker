@@ -7,6 +7,8 @@ function eventFormHandler() {
             console.error("Form not found.");
             return;
         }
+
+        loadSignupData();
         
         // function eventFormHandler() {
             //     const eventSignupForm = document.getElementById("eventSignup");
@@ -18,8 +20,12 @@ function eventFormHandler() {
                 const inputsAreValid = validateEventForm();
                 
                 if(inputsAreValid) {
-                    const eventFormData = getEventFormData();          
-                    console.log("Temporarily storing form data", eventFormData);
+                    const eventFormData = getEventFormData(); 
+                    saveSignupData(eventFormData);
+                    addSignupDataToTable(eventFormData);
+                    updateSummary();
+
+                    // console.log("Temporarily storing form data", eventFormData);
                     
                     // comment out eventSignupForm().submit when testing
                     // eventSignupForm.submit();
@@ -29,6 +35,55 @@ function eventFormHandler() {
             });
         });
     }
+
+// Save event data to localstorage
+function saveSignupData(data) {
+    const existingData = JSON.parse(localStorage.getItem("eventsSignup")) || [] ;
+    existingData.push(data);
+    localStorage.setItem("eventsSignup", JSON.stringify(existingData));
+}
+
+// Add Data to table
+function addSignupDataToTable(data) {
+    const tableBody = document.querySelector("#event-table tbody");
+    const row = document.createElement("tr");
+
+    const columns = [
+        data.eventName,
+        data.repName,
+        data.repEmail,
+        data.eventRole
+    ];
+    
+    columns.forEach(text => {
+        const tableData = document.createElement("td");
+        tableData.textContent = text;
+        row.appendChild(tableData);
+    });
+
+    // Delete button
+    const deleteTd = document.createElement("td");
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.classList.add("delete-button");
+
+    deleteButton.addEventListener("click", () => {
+        deleteSignup(data);
+        row.remove();
+        updateSummary();
+    });
+
+    deleteTd.appendChild(deleteButton);
+    row.appendChild(deleteTd);
+
+    tableBody.appendChild(row);
+}
+
+// Load event data
+function loadSignupData() {
+    const loadSignup = JSON.parse(localStorage.getItem("eventsSignup")) || [];
+    loadSignup.forEach(signup => addSignupDataToTable(signup));
+}
 
 // Validates all required fields
 function validateAllFields(eventName, repName, repEmail, eventRole){
@@ -40,6 +95,42 @@ function validateAllFields(eventName, repName, repEmail, eventRole){
     };
 
     return fieldValidations
+}
+
+// Delete record function
+function deleteSignup(deleteData) {
+    const currentData = JSON.parse(localStorage.getItem("eventsSignup")) || [];
+    const updatedData = currentData.filter(entry => 
+        !(entry.eventName === deleteData.eventName &&
+            entry.repName === deleteData.repName &&
+            entry.repEmail === deleteData.repEmail &&
+            entry.eventRole === deleteData.eventRole
+        )
+    );
+    localStorage.setItem("eventsSignup", JSON.stringify(updatedData))
+}
+
+// Summary update function
+function updateSummary() {
+    const data = JSON.parse(localStorage.getItem("eventsSignup")) || [];
+    const roleCounter = {
+        sponsor:0,
+        participant:0,
+        organizer:0,
+        volunteer:0
+    };
+
+    data.forEach(entry => {
+        if(roleCounter.hasOwnProperty(entry.eventRole)) {
+            roleCounter[entry.eventRole]++
+        }
+    });
+
+    document.getElementById("sponsors-summary").textContent = roleCounter.sponsor;
+    document.getElementById("participants-summary").textContent = roleCounter.participant;
+    document.getElementById("organizers-summary").textContent = roleCounter.organizer;
+    document.getElementById("volunteer-summary").textContent = roleCounter.volunteer;
+
 }
 
 // Main Validation
@@ -183,6 +274,9 @@ function getEventFormData() {
             validateEventRole,
             getEventFormData,
             escapeHTML,
-            displayInputError
+            displayInputError,
+            loadSignupData,
+            deleteSignup,
+            updateSummary
         };
     }
