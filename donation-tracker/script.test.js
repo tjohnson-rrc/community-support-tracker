@@ -595,6 +595,28 @@ describe("Data Processing Tests and Donation Form Integration", () => {
                 expect(storedDonations[0].id).toBe("456");
             });
 
+            test("removes donation row from table when deleted", () => {
+                // Arrange
+                // this verifiess initial state of the tablle
+                let tableRows = nodes.donationsTableBodyNode.querySelectorAll("tr");
+                expect(tableRows).toHaveLength(2);
+                
+                // Act
+                deleteDonation("123", nodes);
+                
+                // Assert - check that the table was updated
+                tableRows = nodes.donationsTableBodyNode.querySelectorAll("tr");
+                expect(tableRows).toHaveLength(1);
+                
+                // Check that the remaining row contains the expected donation data
+                const rowCells = tableRows[0].querySelectorAll("td");
+                expect(rowCells[0].textContent).toBe("Edraque");
+                expect(rowCells[1].textContent).toBe("100");
+                
+                // Check that the delete button for the remaining row has the correct ID to REALLY ensure it's correct.
+                const deleteButton = tableRows[0].querySelector(".delete-button");
+                expect(deleteButton.getAttribute("data-id")).toBe("456");
+            });
         })
 
 
