@@ -583,6 +583,7 @@ describe("Data Processing Tests and Donation Form Integration", () => {
                 
                 // Render the table with both donations
                 renderDonationTable(nodes);
+                updateDonationSummary(nodes);
               });
 
             test("removes donation with matching ID from localStorage", () => {
@@ -616,6 +617,18 @@ describe("Data Processing Tests and Donation Form Integration", () => {
                 // Check that the delete button for the remaining row has the correct ID to REALLY ensure it's correct.
                 const deleteButton = tableRows[0].querySelector(".delete-button");
                 expect(deleteButton.getAttribute("data-id")).toBe("456");
+            });
+
+            test("updates total donation amount when a record is deleted", () => {
+                // Arrange
+                // this just basically verifies the initial state of the donation total/su m; should be 150 :)
+                expect(nodes.totalDonationAmountNode.textContent).toBe("150.00");
+
+                // Act
+                deleteDonation("123", nodes);
+
+                // Assert
+                expect(nodes.totalDonationAmountNode.textContent).toBe("100.00");
             });
         })
 
