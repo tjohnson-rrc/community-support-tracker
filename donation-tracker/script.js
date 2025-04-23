@@ -40,6 +40,12 @@ function handleDonationFormSubmission(nodes, tempData) {
         // Displays the temporary donation data when user submits  
         console.log("Donation submitted: ", temporaryDonationData);
 
+        /* Stage 2 stuff !!!! */
+        // Add donation to localStorage
+        addDonationToStorage(tempData);
+        // Update the table with the new donation
+        renderDonationTable(nodes);
+
         // Set a timeout just to see the console.log before page refreshes
         // for testing purposes 
         
@@ -48,7 +54,11 @@ function handleDonationFormSubmission(nodes, tempData) {
             nodes.donationTrackerFormNode.submit();
         }, 15000);
         */
-        nodes.donationTrackerFormNode.submit();
+        // nodes.donationTrackerFormNode.submit();
+
+        /* FOR STAGE 2 TESTING, RESET WILL BE USED INSTEAD OF SUBMIT */
+        // Reset the form fields
+        nodes.donationTrackerFormNode.reset();
     } else {
         console.warn("Invalid inputs.");
     }
