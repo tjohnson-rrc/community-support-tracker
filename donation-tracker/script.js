@@ -12,7 +12,8 @@ function initDomNodes() {
         donationDateInputNode: document.querySelector("#field_donation-date"),
         donationCommentInputNode: document.querySelector("#field_donor-comment"),
         // stage 2
-        donationsTableBodyNode: document.querySelector("#donations-table-body")
+        donationsTableBodyNode: document.querySelector("#donations-table-body"),
+        totalDonationAmountNode: document.querySelector("#total-donation-amount")
     };
 }
 
@@ -324,6 +325,27 @@ function renderDonationTable(nodes) {
     } catch (error) {
         throw new Error("Failed to display donations: " + error);
     }
+}
+
+// Calculate the total donation amount
+function calculateTotalDonationAmount() {
+    const donations = getDonationsFromStorage();
+    // CITATION (reduce()): https://www.w3schools.com/jsref/jsref_reduce.asp
+    // CITATION (parseFloat()): https://www.w3schools.com/jsref/jsref_parsefloat.asp
+    // CITATION (isNaN()): https://www.w3schools.com/jsref/jsref_isnan.asp
+    // utilized these because the regex I used for validations are just from regex101/forum,
+    // so I want to ensure it's right.
+    return donations.reduce((total, donation) => {
+        const amount = parseFloat(donation.donationAmount);
+        return total + (isNaN(amount) ? 0 : amount);
+    }, 0);
+}
+
+// Update the summary section with the total donation amount
+function updateDonationSummary(nodes) {
+    const totalAmount = calculateTotalDonationAmount();
+    // CITATION (toFixed): https://www.w3schools.com/jsref/jsref_tofixed.asp
+    nodes.totalDonationAmountNode.textContent = totalAmount.toFixed(2);
 }
 
 // If our runtime environment is the browser, incoke the event listener/page load
