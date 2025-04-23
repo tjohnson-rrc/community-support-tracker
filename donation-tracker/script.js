@@ -329,23 +329,31 @@ function renderDonationTable(nodes) {
 
 // Calculate the total donation amount
 function calculateTotalDonationAmount() {
-    const donations = getDonationsFromStorage();
-    // CITATION (reduce()): https://www.w3schools.com/jsref/jsref_reduce.asp
-    // CITATION (parseFloat()): https://www.w3schools.com/jsref/jsref_parsefloat.asp
-    // CITATION (isNaN()): https://www.w3schools.com/jsref/jsref_isnan.asp
-    // utilized these because the regex I used for validations are just from regex101/forum,
-    // so I want to ensure it's right.
-    return donations.reduce((total, donation) => {
-        const amount = parseFloat(donation.donationAmount);
-        return total + (isNaN(amount) ? 0 : amount);
-    }, 0);
+    try {
+        const donations = getDonationsFromStorage();
+        // CITATION (reduce()): https://www.w3schools.com/jsref/jsref_reduce.asp
+        // CITATION (parseFloat()): https://www.w3schools.com/jsref/jsref_parsefloat.asp
+        // CITATION (isNaN()): https://www.w3schools.com/jsref/jsref_isnan.asp
+        // utilized these because the regex I used for validations are just from regex101/forum,
+        // so I want to ensure it's right.
+        return donations.reduce((total, donation) => {
+            const amount = parseFloat(donation.donationAmount);
+            return total + (isNaN(amount) ? 0 : amount);
+        }, 0);
+    } catch (error) {
+        throw new Error("Failed to calculate total donations: " + error);
+    }
 }
 
 // Update the summary section with the total donation amount
 function updateDonationSummary(nodes) {
-    const totalAmount = calculateTotalDonationAmount();
-    // CITATION (toFixed): https://www.w3schools.com/jsref/jsref_tofixed.asp
-    nodes.totalDonationAmountNode.textContent = totalAmount.toFixed(2);
+    try {
+        const totalAmount = calculateTotalDonationAmount();
+        // CITATION (toFixed): https://www.w3schools.com/jsref/jsref_tofixed.asp
+        nodes.totalDonationAmountNode.textContent = totalAmount.toFixed(2);
+    } catch (error) {
+        throw new Error("Failed to update donation summary: " + error);
+    }
 }
 
 // If our runtime environment is the browser, incoke the event listener/page load
