@@ -322,6 +322,15 @@ function renderDonationTable(nodes) {
             
             tableBody.appendChild(row);
         });
+
+        // Add event listeners to delete buttons
+        const deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const donationId = button.getAttribute('data-id');
+                deleteDonation(donationId, nodes);
+        });
+    });
     } catch (error) {
         throw new Error("Failed to display donations: " + error);
     }
@@ -353,6 +362,22 @@ function updateDonationSummary(nodes) {
         nodes.totalDonationAmountNode.textContent = totalAmount.toFixed(2);
     } catch (error) {
         throw new Error("Failed to update donation summary: " + error);
+    }
+}
+
+// Delete a donation from localStorage UTILIZING an ID
+function deleteDonation(donationId, nodes) {
+    try{
+        const donations = getDonationsFromStorage();
+        // CITATION (filter()): https://www.w3schools.com/jsref/jsref_filter.asp
+        const updatedDonations = donations.filter(donation => donation.id !== donationId);
+        localStorage.setItem(DONATIONS_STORAGE_KEY, JSON.stringify(updatedDonations));
+        
+        // Updates the UI 
+        renderDonationTable(nodes);
+        updateDonationSummary(nodes);
+    } catch (error) {
+        throw new Error("Failed to delete donation record: " + error);
     }
 }
 
