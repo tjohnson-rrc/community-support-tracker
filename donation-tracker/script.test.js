@@ -572,6 +572,31 @@ describe("Data Processing Tests and Donation Form Integration", () => {
             });
         })
 
+        describe("deleteDonation", () => {
+            beforeEach(() => {
+                // Set up common test data only for delete donations testss
+                const donations = [
+                  { id: "123", charityName: "Zach", donationAmount: "50", donationDate: "2023-01-01", donorComment: "too much" },
+                  { id: "456", charityName: "Edraque", donationAmount: "100", donationDate: "2023-02-01", donorComment: "to doooo" }
+                ];
+                localStorage.setItem("donationRecords", JSON.stringify(donations));
+                
+                // Render the table with both donations
+                renderDonationTable(nodes);
+              });
+
+            test("removes donation with matching ID from localStorage", () => {
+                // Act
+                deleteDonation("123", nodes);
+                
+                // Assert - check localStorage
+                const storedDonations = JSON.parse(localStorage.getItem("donationRecords"));
+                expect(storedDonations).toHaveLength(1);
+                expect(storedDonations[0].id).toBe("456");
+            });
+
+        })
+
 
     
     });
