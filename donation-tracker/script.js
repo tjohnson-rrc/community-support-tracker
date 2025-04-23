@@ -1,5 +1,7 @@
 // NODES AND VARIABLES
 let temporaryDonationData = {};
+// Decided to have a constant for localStorage for clarity!!
+const DONATIONS_STORAGE_KEY = "donationRecords";
 
 // Initialize the DOM nodes after the document is loaded (invoked at the bottom)
 function initDomNodes() {
@@ -9,6 +11,8 @@ function initDomNodes() {
         donationAmountInputNode: document.querySelector("#field_donation-amount"),
         donationDateInputNode: document.querySelector("#field_donation-date"),
         donationCommentInputNode: document.querySelector("#field_donor-comment"),
+        // stage 2
+        donationsTableBodyNode: document.querySelector("#donations-table-body")
     };
 }
 
@@ -245,6 +249,30 @@ function escapeHTML(input) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+// STAGE 2 FUNCTIONS
+// Add a new donation to localStorage
+function addDonationToStorage(donation) {
+    try {
+        const existingDonations = getDonationsFromStorage();
+        existingDonations.push(donation);
+        localStorage.setItem(DONATIONS_STORAGE_KEY, JSON.stringify(existingDonations));
+    } catch (error) {
+        throw new Error("Unable to add donations: " + error);
+    }
+}
+
+// Get all donations from localStorage
+function getDonationsFromStorage() {
+    try{
+        const donationsString = localStorage.getItem(DONATIONS_STORAGE_KEY);
+        return donationsString ? JSON.parse(donationsString) : [];
+    } catch (error) {
+        throw new Error("Unable to get donations: " + error);
+    }
+}
+
+
 
 // If our runtime environment is the browser, incoke the event listener/page load
 if (typeof window !== "undefined") {
