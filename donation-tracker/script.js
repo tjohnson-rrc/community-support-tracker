@@ -56,16 +56,16 @@ function handleDonationFormSubmission(nodes, tempData) {
 
         // Set a timeout just to see the console.log before page refreshes
         // for testing purposes 
-        
-        /* COMMENTED OUT FOR TESTING
+        /* COMMENTED OUT FOR TESTING IN BROWSER
         setTimeout(() => {
             nodes.donationTrackerFormNode.submit();
         }, 15000);
         */
+
         // nodes.donationTrackerFormNode.submit();
 
-        /* FOR STAGE 2 TESTING, RESET WILL BE USED INSTEAD OF SUBMIT */
-        // Reset the form fields
+        /* FOR STAGE 2 JEST ENVIRONMENT AND BROWSER TESTING, RESET WILL BE USED INSTEAD OF SUBMIT */
+        // Also resets the form fields
         nodes.donationTrackerFormNode.reset();
     } else {
         console.warn("Invalid inputs.");
@@ -409,6 +409,14 @@ if (typeof window !== "undefined") {
         initDomNodes,
         init,
         getTemporaryDonationData,
-        setTemporaryDonationData
+        setTemporaryDonationData,
+        // Stage 2 functions
+        getDonationsFromStorage,
+        addDonationToStorage,
+        deleteDonation,
+        calculateTotalDonationAmount,
+        updateDonationSummary,
+        renderDonationTable,
+        loadDonationsFromStorage,
     };
 }

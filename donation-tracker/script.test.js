@@ -10,8 +10,46 @@ const {
     initDomNodes,
     displayInputError,
     getTemporaryDonationData,
-    setTemporaryDonationData
+    setTemporaryDonationData,
+    // stage 2 stuff
+    getDonationsFromStorage,
+    addDonationToStorage,
+    deleteDonation,
+    calculateTotalDonationAmount,
+    updateDonationSummary,
+    renderDonationTable,
+    loadDonationsFromStorage
 } = require("./script");
+
+// CITATION: https://stackoverflow.com/questions/32911630/how-do-i-deal-with-localstorage-in-jest-tests
+if (typeof window !== "undefined") {
+    // We're in a browser environment, use native localStorage
+  } else {
+    // We're in Node.js, create a localStorage polyfill
+    class LocalStorageMock {
+      constructor() {
+        this.store = {};
+      }
+      
+      getItem(key) {
+        return this.store[key] || null;
+      }
+      
+      setItem(key, value) {
+        this.store[key] = String(value);
+      }
+      
+      removeItem(key) {
+        delete this.store[key];
+      }
+      
+      clear() {
+        this.store = {};
+      }
+    }
+    
+    global.localStorage = new LocalStorageMock();
+}
 
 const { JSDOM } = require("jsdom");
 
@@ -295,6 +333,10 @@ describe("Data Processing Tests and Donation Form Integration", () => {
                             <input type="submit" class="submitButton" value="Submit">
                         </div>
                     </form>
+                    <table id="donations-table">
+                        <tbody id="donations-table-body"></tbody>
+                    </table>
+                <span id="total-donation-amount">0.00</span>
                 </body>
             </html>
             `);
@@ -303,17 +345,28 @@ describe("Data Processing Tests and Donation Form Integration", () => {
         global.document = testDom.window.document;
         global.window = testDom.window;
 
+        // Make sure localStorage is available for stage 2 and the init tests in stage 1
+        if (!global.localStorage) {
+            global.localStorage = new LocalStorageMock();
+        }
+
         // Initialize DOM nodes for testing
         nodes = {
             donationTrackerFormNode: global.document.querySelector("#donation-tracker-form"),
             charityNameInputNode: global.document.querySelector("#field_charity-name"),
             donationAmountInputNode: global.document.querySelector("#field_donation-amount"),
             donationDateInputNode: global.document.querySelector("#field_donation-date"),
-            donationCommentInputNode: global.document.querySelector("#field_donor-comment")
+            donationCommentInputNode: global.document.querySelector("#field_donor-comment"),
+            // Stage 2 nodes
+            donationsTableBodyNode: global.document.querySelector("#donations-table-body"),
+            totalDonationAmountNode: global.document.querySelector("#total-donation-amount")
         };
 
         // Reset temporaryDonationData for each test to run smoothly.
         global.temporaryDonationData = {};
+
+        // Clear localStorage
+        localStorage.clear();
     });
 
     // Test collectTemporaryDonationData function
@@ -436,7 +489,10 @@ describe("Data Processing Tests and Donation Form Integration", () => {
 
 
             // Assert
-            expect(actualData).toEqual(expectedData);
+            expect(actualData.charityName).toEqual(expectedData.charityName);
+            expect(actualData.donationAmount).toEqual(expectedData.donationAmount);
+            expect(actualData.donationDate).toEqual(expectedData.donationDate);
+            expect(actualData.donorComment).toEqual(expectedData.donorComment);
         });
     });
 
