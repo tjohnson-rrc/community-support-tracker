@@ -111,3 +111,74 @@ if (!rating) {
 
 
 // The selecting Rating //
+function getselectedRating(ratingNodes) {
+    for (let node of ratingNodes) {
+        if (node.checked) return node.value;
+    }
+    return null;
+}
+
+// validation functions //
+function validateCharityName(input) {
+    const pattern = /^[A-Za-z]([a-zA-Z0-9 ]|[- @\.#&!]){3,}$/;
+    const isValid = pattern.test(input);
+    return {
+        isValid,
+        errorMessages: isValid ? [] : ["Please enter a valid charity name (4+ characters)."]
+    };
+}
+
+function validateHoursVolunteered(input) {
+    const pattern = /^[0-9]+(\.[0-5]?)?$/;
+    const isValid = pattern.test(input) && parseFloat(input) > 0;
+    return {
+        isValid,
+        errorMessages: isValid ? [] : ["Please enter a valid number of hours (e.g., 2, 1.5)."]
+    };
+}
+
+function validateVolunteerDate(input) {
+    const today = new Date().toISOString().split("T")[0];
+    const isValid = input && input <= today;
+    return {
+        isValid,
+        errorMessages: isValid ? [] : ["Please select a valid past or current date."]
+    };
+}
+
+// some additional help //
+function displayInputError(inputElement, message) {
+    let parent = inputElement.closest(".input-container") || inputElement.parentElement;
+    const errorSpan = document.createElement("span");
+    errorSpan.textContent = message;
+    errorSpan.classList.add("input-error");
+    errorSpan.setAttribute("role", "alert");
+    parent.appendChild(errorSpan);
+}
+
+function escapeHTML(input) {
+    return input
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// browser runtime //
+if (typeof window !== "undefined") {
+    window.addEventListener("DOMContentLoaded", init);
+} else {
+    module.exports = {
+        collectTemporaryVolunteerData,
+        validateVolunteerForm,
+        validateCharityName,
+        validateHoursVolunteered,
+        validateVolunteerDate,
+        displayInputError,
+        escapeHTML,
+        handleVolunteerFormSubmission,
+        initDomNodes,
+        init
+    };
+}
