@@ -526,6 +526,34 @@ describe("Data Processing Tests and Donation Form Integration", () => {
                 expect(deleteButtons[0].getAttribute("data-id")).toBe("123");
             });
         })
+
+        describe("handleDonationFormSubmission", () => {
+            test("adds new donation to localStorage and updates the donation table", () => {
+                // Arrange
+                nodes.charityNameInputNode.value = "Zachie Mont";
+                nodes.donationAmountInputNode.value = "123";
+                nodes.donationDateInputNode.value = "2023-05-01";
+                nodes.donationCommentInputNode.value = "test comment";
+
+                // Act
+                handleDonationFormSubmission(nodes);
+
+                // Assert
+
+                // localStorage
+                const storedDonations = JSON.parse(localStorage.getItem("donationRecords"));
+                expect(storedDonations).toHaveLength(1);
+                expect(storedDonations[0].charityName).toBe("Zachie Mont");
+
+                // Table DOM
+                const tableRows = nodes.donationsTableBodyNode.querySelectorAll("tr");
+                expect(tableRows).toHaveLength(1);
+                const firstRowCells = tableRows[0].querySelectorAll("td");
+                expect(firstRowCells[0].textContent).toBe("Zachie Mont");
+                expect(firstRowCells[1].textContent).toBe("123");
+            });
+        })
+        
     
 
 
